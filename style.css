@@ -1,0 +1,193 @@
+/* Базовые стили */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+.screen {
+  padding: 20px;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Анимации переходов */
+.screen:not(.hidden) {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Онбординг */
+.onboarding-content {
+  text-align: center;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.logo {
+  width: 150px;
+}
+
+#steps p {
+  background-color: #fff;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s; /* Для подсветки */
+}
+
+.highlight {
+  background-color: yellow !important; /* Подсветка шага */
+}
+
+/* Главный экран */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+#search-input,
+#sort-select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.app-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 20px;
+}
+
+.app-card {
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.app-card:hover {
+  transform: scale(1.05);
+}
+
+.app-card img {
+  width: 50px;
+  height: 50px;
+}
+
+/* Skeleton loading */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  height: 100px; /* Для карточек */
+  border-radius: 10px;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Карточка приложения */
+.large-icon {
+  width: 100px;
+  height: 100px;
+}
+
+.screenshots {
+  display: flex;
+  overflow-x: auto;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.screenshots img {
+  width: 200px;
+  cursor: pointer;
+}
+
+/* Модал галереи */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#gallery-images {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+}
+
+#gallery-images img {
+  max-height: 80vh;
+}
+
+#close-gallery {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: white;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+/* Категории */
+#category-list {
+  list-style: none;
+  padding: 0;
+}
+
+#category-list li {
+  background: #fff;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Responsive: Для мобильных */
+@media (max-width: 768px) {
+  .app-list {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+  header {
+    flex-direction: column;
+  }
+  #search-input,
+  #sort-select,
+  button {
+    margin-bottom: 10px;
+    width: 100%;
+  }
+}

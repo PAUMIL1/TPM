@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RuStore MVP</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Онбординг: Показывается только при первом запуске -->
+    <section id="onboarding" class="screen hidden">
+      <div class="onboarding-content">
+        <img
+          src="https://via.placeholder.com/150?text=RuStore+Logo"
+          alt="Логотип RuStore"
+          class="logo"
+        />
+        <h1>Добро пожаловать в RuStore!</h1>
+        <p>Откройте для себя мир российских приложений.</p>
+        <!-- Шаги демонстрации: Подсветка элементов (через JS) -->
+        <div id="steps">
+          <p>Шаг 1: Главный экран — список приложений.</p>
+          <p>Шаг 2: Нажмите на карточку для деталей.</p>
+          <p>Шаг 3: Используйте поиск и категории.</p>
+        </div>
+        <button id="start-btn">Начать</button>
+      </div>
+    </section>
+
+    <!-- Главный экран: Витрина -->
+    <section id="main" class="screen hidden">
+      <header>
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Поиск по названию..."
+        />
+        <select id="sort-select">
+          <option value="name">По имени</option>
+          <option value="rating">По популярности</option>
+          <option value="new">По новизне</option>
+        </select>
+        <button id="categories-btn">Категории</button>
+      </header>
+      <!-- Секции рекомендаций -->
+      <h2>Популярные</h2>
+      <div id="popular-apps" class="app-list"></div>
+      <h2>Новинки</h2>
+      <div id="new-apps" class="app-list"></div>
+      <h2>Вы недавно смотрели</h2>
+      <div id="recent-apps" class="app-list"></div>
+      <h2>Все приложения</h2>
+      <div id="app-list" class="app-list"></div>
+    </section>
+
+    <!-- Карточка приложения -->
+    <section id="app-detail" class="screen hidden">
+      <button id="back-btn">Назад</button>
+      <div class="app-info">
+        <img id="app-icon" src="" alt="Иконка" class="large-icon" />
+        <h1 id="app-name"></h1>
+        <p id="app-developer"></p>
+        <p id="app-category"></p>
+        <p id="app-rating"></p>
+        <p id="app-age"></p>
+        <p id="app-description"></p>
+      </div>
+      <div class="screenshots" id="screenshots"></div>
+      <h2>Похожие приложения</h2>
+      <div id="similar-apps" class="app-list"></div>
+      <!-- Fullscreen галерея (модал) -->
+      <div id="gallery-modal" class="modal hidden">
+        <span id="close-gallery">&times;</span>
+        <div id="gallery-images"></div>
+      </div>
+    </section>
+
+    <!-- Экран категорий -->
+    <section id="categories" class="screen hidden">
+      <button id="back-categories">Назад</button>
+      <h1>Категории</h1>
+      <ul id="category-list"></ul>
+    </section>
+
+    <script src="app.js"></script>
+  </body>
+</html>

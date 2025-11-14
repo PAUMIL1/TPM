@@ -1,0 +1,69 @@
+[
+  {
+    "id": 1,
+    "name": "VK Messenger",
+    "icon": "https://via.placeholder.com/50?text=VK",
+    "rating": 4.5,
+    "category": "Социальные",
+    "developer": "VK",
+    "age": "12+",
+    "description": "Мессенджер для общения с друзьями.",
+    "screenshots": [
+      "https://via.placeholder.com/200?text=Screen1",
+      "https://via.placeholder.com/200?text=Screen2"
+    ],
+    "date": "2023-10-01"
+  },
+  {
+    "id": 2,
+    "name": "Sberbank Online",
+    "icon": "https://via.placeholder.com/50?text=Sber",
+    "rating": 4.8,
+    "category": "Финансы",
+    "developer": "Sberbank",
+    "age": "0+",
+    "description": "Банковское приложение для управления финансами.",
+    "screenshots": ["https://via.placeholder.com/200?text=Screen1"],
+    "date": "2023-11-01"
+  },
+  {
+    "id": 3,
+    "name": "Yandex Maps",
+    "icon": "https://via.placeholder.com/50?text=Yandex",
+    "rating": 4.2,
+    "category": "Транспорт",
+    "developer": "Yandex",
+    "age": "6+",
+    "description": "Карты и навигация.",
+    "screenshots": [
+      "https://via.placeholder.com/200?text=Screen1",
+      "https://via.placeholder.com/200?text=Screen2",
+      "https://via.placeholder.com/200?text=Screen3"
+    ],
+    "date": "2023-09-15"
+  },
+  {
+    "id": 4,
+    "name": "Gosuslugi",
+    "icon": "https://via.placeholder.com/50?text=Gos",
+    "rating": 4.0,
+    "category": "Государственные",
+    "developer": "Government",
+    "age": "0+",
+    "description": "Государственные услуги онлайн.",
+    "screenshots": ["https://via.placeholder.com/200?text=Screen1"],
+    "date": "2023-10-20"
+  },
+  {
+    "id": 5,
+    "name": "Calculator",
+    "icon": "https://via.placeholder.com/50?text=Calc",
+    "rating": 3.9,
+    "category": "Инструменты",
+    "developer": "Simple Tools",
+    "age": "0+",
+    "description": "Простой калькулятор.",
+    "screenshots": ["https://via.placeholder.com/200?text=Screen1"],
+    "date": "2023-11-10"
+  }
+]
