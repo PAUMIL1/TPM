@@ -167,20 +167,22 @@ document.addEventListener("DOMContentLoaded", () => {
   loadData();
 
   // Онбординг
-    showScreen("onboarding");
-    // Шаги с подсветкой (по очереди)
-    const steps = document.querySelectorAll("#steps p");
-    let i = 0;
-    const interval = setInterval(() => {
-      if (i > 0) steps[i - 1].classList.remove("highlight");
-      if (i < steps.length) {
-        steps[i].classList.add("highlight");
-        i++;
-      } else clearInterval(interval);
-    }, 900); // Каждые 2 сек
+  showScreen("onboarding");
+  // Шаги с подсветкой (по очереди)
+  const steps = document.querySelectorAll("#steps p");
+  let i = 0;
+  const interval = setInterval(() => {
+    if (i > 0) steps[i - 1].classList.remove("highlight");
+    if (i < steps.length) {
+      steps[i].classList.add("highlight");
+      i++;
+    } else clearInterval(interval);
+  }, 900); // Каждые 2 сек
 
-    document.getElementById("start-btn").addEventListener("click", () => {showScreen("main")});
-  
+  document.getElementById("start-btn").addEventListener("click", () => {
+    showScreen("main");
+  });
+
   // Кнопки навигации
   document.getElementById("categories-btn").addEventListener("click", () => {
     renderCategories();
