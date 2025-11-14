@@ -7,18 +7,25 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <!-- Онбординг: Показывается только при первом запуске -->
-    <section id="onboarding" class="screen hidden">
-      <div class="onboarding-content">
-        <div class="logo-group"></div>
-        <img src="images/logo.png" alt="Логотип RuStore" class="logo" />
-        <p class="small-text">Откройте для себя мир российских приложений</p>
+    <!-- СПЛЕШ: 2 сек, белый фон, большой логотип -->
+    <section id="splash" class="screen">
+      <div class="splash-content">
+        <img src="images/logo.png" alt="RuStore" class="splash-logo" />
       </div>
-      <button id="start-btn">Начать</button>
     </section>
 
-    <!-- Главный экран: Витрина -->
-    <section id="main" class="screen hidden">
+    <!-- ОНБОРДИНГ: Только при первом запуске -->
+    <section id="onboarding" class="screen">
+      <div class="onboarding-container">
+        <img src="images/logo.png" alt="RuStore" class="onboarding-logo" />
+        <h1 class="welcome-text">Добро пожаловать в RuStore!</h1>
+        <p class="subtext">Откройте для себя мир российских приложений</p>
+        <button id="start-btn">Начать</button>
+      </div>
+    </section>
+
+    <!-- ГЛАВНЫЙ ЭКРАН -->
+    <section id="main" class="screen">
       <header>
         <input
           type="text"
@@ -32,22 +39,25 @@
         </select>
         <button id="categories-btn">Категории</button>
       </header>
-      <!-- Секции рекомендаций -->
+
       <h2>Популярные</h2>
       <div id="popular-apps" class="app-list"></div>
+
       <h2>Новинки</h2>
       <div id="new-apps" class="app-list"></div>
+
       <h2>Вы недавно смотрели</h2>
       <div id="recent-apps" class="app-list"></div>
+
       <h2>Все приложения</h2>
       <div id="app-list" class="app-list"></div>
     </section>
 
-    <!-- Карточка приложения -->
-    <section id="app-detail" class="screen hidden">
+    <!-- КАРТОЧКА ПРИЛОЖЕНИЯ -->
+    <section id="app-detail" class="screen">
       <button id="back-btn">Назад</button>
       <div class="app-info">
-        <img id="app-icon" src="" alt="Иконка" class="large-icon" />
+        <img id="app-icon" src="" alt="" class="large-icon" />
         <h1 id="app-name"></h1>
         <p id="app-developer"></p>
         <p id="app-category"></p>
@@ -58,15 +68,16 @@
       <div class="screenshots" id="screenshots"></div>
       <h2>Похожие приложения</h2>
       <div id="similar-apps" class="app-list"></div>
-      <!-- Fullscreen галерея (модал) -->
-      <div id="gallery-modal" class="modal hidden">
-        <span id="close-gallery">&times;</span>
+
+      <!-- Галерея -->
+      <div id="gallery-modal" class="modal">
+        <span id="close-gallery">×</span>
         <div id="gallery-images"></div>
       </div>
     </section>
 
-    <!-- Экран категорий -->
-    <section id="categories" class="screen hidden">
+    <!-- ЭКРАН КАТЕГОРИЙ -->
+    <section id="categories" class="screen">
       <button id="back-categories">Назад</button>
       <h1>Категории</h1>
       <ul id="category-list"></ul>
