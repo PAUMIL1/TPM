@@ -1,6 +1,6 @@
 /* Базовые стили */
 body {
-  font-family: "fonts\VKSansDisplay-Regular";
+  font-family: 'fonts/VK_Sans_Display_Regular.ttf';
   margin: 0;
   padding: 0;
   background-color: #f4f4f4;
@@ -8,11 +8,11 @@ body {
 }
 
 h1 {
-  font-family: "VKSansDisplay-Medium";
+  font-family: "fonts/VKSansDisplay-Medium.ttf";
 }
 
 h2 {
-  font-family: "VKSansDisplay-Bold";
+  font-family: "fonts/VKSansDisplay-Bold.ttf";
 }
 
 .screen {
@@ -225,5 +225,7 @@ header {
   button {
     margin-bottom: 10px;
     width: 100%;
+    font-family: "fonts/VKSansDisplay-Bold.ttf";
+    font-size: 45px;
   }
 }
