@@ -166,8 +166,7 @@ const showScreen = (id) => {
 document.addEventListener("DOMContentLoaded", () => {
   loadData();
 
-  // Онбординг: Показать если первый раз
-  if (!localStorage.getItem("onboarded")) {
+  // Онбординг
     showScreen("onboarding");
     // Шаги с подсветкой (по очереди)
     const steps = document.querySelectorAll("#steps p");
@@ -178,16 +177,10 @@ document.addEventListener("DOMContentLoaded", () => {
         steps[i].classList.add("highlight");
         i++;
       } else clearInterval(interval);
-    }, 2000); // Каждые 2 сек
+    }, 900); // Каждые 2 сек
 
-    document.getElementById("start-btn").addEventListener("click", () => {
-      localStorage.setItem("onboarded", "true");
-      showScreen("main");
-    });
-  } else {
-    showScreen("main");
-  }
-
+    document.getElementById("start-btn").addEventListener("click", () => {showScreen("main")});
+  
   // Кнопки навигации
   document.getElementById("categories-btn").addEventListener("click", () => {
     renderCategories();
