@@ -172,71 +172,61 @@ const showScreen = (id) => {
   if (id === "main") filterAndRender();
 };
 
-/* ------------------- 9. Сплеш ------------------- */
-const showSplash = () =>
-  new Promise((r) =>
+/* ------------------- СПЛЕШ + ОНБОРДИНГ ------------------- */
+const runSplash = () => {
+  return new Promise((resolve) => {
+    const splash = document.getElementById("splash");
+    const logo = document.getElementById("shared-logo");
+    const startBtn = document.getElementById("start-btn");
+
     setTimeout(() => {
-      document.getElementById("splash").style.display = "none";
-      r();
-    }, 2000)
-  );
+      const isFirstLaunch = !localStorage.getItem(""); // Исправлено: было пустое ""
 
-/* ------------------- 10. Онбординг (новая анимация) ------------------- */
-const runOnboarding = () => {
-  const container = document.querySelector(".onboarding-container");
-  const logo = document.querySelector(".onboarding-logo");
-  const welcome = document.querySelector(".welcome-text");
-  const sub = document.querySelector(".subtext");
-  const btn = document.getElementById("start-btn");
+      if (isFirstLaunch) {
+        // 1. Логотип уходит вверх
+        logo.classList.add("to-onboarding");
+        splash.classList.add("show-onboarding"); // ← Текст и кнопка появляются одновременно
 
-  container.style.opacity = "0";
-  logo.style.opacity = "0";
-  logo.style.transform = "translateY(0)";
-  welcome.style.opacity = "0";
-  sub.style.opacity = "0";
-  btn.classList.remove("active");
-  btn.disabled = true;
+        // 2. Активируем кнопку (фон, цвет, тень) через 0.9 сек
+        setTimeout(() => {
+          startBtn.classList.add("active");
+          startBtn.disabled = false;
+        }, 400);
 
-  setTimeout(() => {
-    container.style.opacity = "1";
-  }, 100);
-
-  setTimeout(() => {
-    logo.style.opacity = "1";
-    logo.style.transform = "translateY(-80px)";
-  }, 400);
-
-  setTimeout(() => {
-    welcome.style.opacity = "1";
-  }, 600);
-  setTimeout(() => {
-    sub.style.opacity = "1";
-  }, 900);
-
-  setTimeout(() => {
-    btn.classList.add("active");
-    btn.disabled = false;
-  }, 1200);
+        // 3. Клик по кнопке
+        startBtn.onclick = () => {
+          localStorage.setItem("onboarded", "true");
+          splash.classList.add("fade-out");
+          setTimeout(() => {
+            splash.style.display = "none";
+            showScreen("main");
+            setTimeout(runDemo, 500);
+            resolve();
+          }, 1200);
+        };
+      } else {
+        // Пропуск онбординга
+        splash.classList.add("fade-out");
+        setTimeout(() => {
+          splash.style.display = "none";
+          showScreen("main");
+          resolve();
+        }, 2500);
+      }
+    }, 700);
+  });
 };
-
-/* ------------------- 11. Инициализация ------------------- */
+/* ------------------- ИНИЦИАЛИЗАЦИЯ ------------------- */
 document.addEventListener("DOMContentLoaded", async () => {
   await loadData();
-  await showSplash();
+  await runSplash();
 
-  showScreen("onboarding");
-  runOnboarding(); // ← запуск новой анимации
-
-  const startBtn = document.getElementById("start-btn");
-  startBtn.onclick = () => {
-    if (!startBtn.disabled) showScreen("main");
-  };
-
-  /* ---------- кнопки навигации ---------- */
+  // Навигация, поиск, категории — как раньше
   document.getElementById("categories-btn").onclick = () => {
     renderCategories();
     showScreen("categories");
   };
+
   document.getElementById("back-categories").onclick = () => {
     currentCategory = null;
     showScreen("main");
