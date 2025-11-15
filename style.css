@@ -618,3 +618,98 @@ header {
     font-size: 22px;
   }
 }
+
+/* ===================================================================
+   18. ПОПУЛЯРНЫЕ КАТЕГОРИИ (ТОП-3) – ГРАДИЕНТЫ + ВЫРОВНЕННЫЕ РАЗМЕРЫ
+   =================================================================== */
+.popular-categories {
+  margin: 24px 0;
+}
+.section-title {
+  margin: 0 0 12px 0;
+  font-size: clamp(18px, 5vw, 22px);
+  font-weight: 600;
+  color: #222;
+}
+
+/* Сетка: 2 колонки, 2 строки, равные отступы */
+.categories-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: repeat(2, 1fr);
+  align-items: stretch;
+}
+
+/* ТОП-1 – левая колонка, две строки */
+.category-card.top-1 {
+  grid-row: 1 / 3;
+  min-height: 0;
+}
+
+/* ТОП-2 и ТОП-3 – по одной строке */
+.category-card.top-2,
+.category-card.top-3 {
+  aspect-ratio: 2 / 1;
+  min-height: 0;
+}
+
+/* === ГРАДИЕНТЫ ДЛЯ КАЖДОЙ КАРТОЧКИ === */
+.category-card.top-1 {
+  background: linear-gradient(135deg, #ff3985, #8024c0);
+}
+.category-card.top-2 {
+  background: linear-gradient(135deg, #8024c0, #0077ff);
+}
+.category-card.top-3 {
+  background: linear-gradient(135deg, #0077ff, #00eaff);
+}
+
+/* Общие стили карточки */
+.category-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  align-items: flex-end;
+  padding: 12px;
+  box-sizing: border-box;
+}
+.category-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Плейсхолдер (если нужно изображение) */
+.category-card .placeholder {
+  position: absolute;
+  inset: 0;
+  background: center/cover no-repeat;
+  opacity: 0.2;
+  z-index: 0;
+}
+
+/* Название категории */
+.category-card .category-name {
+  position: relative;
+  z-index: 1;
+  font-weight: 600;
+  font-size: clamp(14px, 4vw, 16px);
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Адаптивность */
+@media (max-width: 440px) {
+  .categories-grid {
+    gap: 8px;
+  }
+  .category-card {
+    padding: 8px;
+  }
+  .category-card .category-name {
+    font-size: 13px;
+  }
+}

@@ -414,3 +414,80 @@ const resetCarouselAutoplay = () => {
   clearInterval(carouselInterval);
   startCarouselAutoplay();
 };
+
+// ===================================================================
+// 13. ПОПУЛЯРНЫЕ КАТЕГОРИИ (ТОП-3)
+// ===================================================================
+
+/**
+ * Возвращает массив объектов {category, count}
+ * отсортированный по убыванию количества приложений.
+ */
+const getTopCategories = () => {
+  const counts = {};
+  apps.forEach((a) => {
+    counts[a.category] = (counts[a.category] || 0) + 1;
+  });
+  return Object.entries(counts)
+    .map(([category, count]) => ({ category, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 3);
+};
+
+/**
+ * Рендерит блок «Популярные категории».
+ */
+const renderPopularCategories = () => {
+  const container = document.getElementById("popular-categories");
+  if (!container) return;
+
+  const top = getTopCategories();
+  if (top.length === 0) {
+    container.style.display = "none";
+    return;
+  }
+
+  const cards = container.querySelectorAll(".category-card");
+  top.forEach((cat, i) => {
+    const card = cards[i];
+    if (!card) return;
+
+    // Заполняем данные
+    card.dataset.category = cat.category;
+    card.querySelector(".category-name").textContent = cat.category;
+
+    // Фон-градиент
+    card.style.setProperty("--cat-bg", bgGradients[i]);
+
+    // Клик → фильтр по категории
+    card.onclick = () => {
+      currentCategory = cat.category;
+      filterAndRender();
+      showScreen("main");
+    };
+  });
+
+  // Скрываем лишние карточки, если топ < 3
+  for (let i = top.length; i < cards.length; i++) {
+    cards[i].style.display = "none";
+  }
+};
+
+/* -------------------------------------------------
+   Добавляем вызов в filterAndRender и в showScreen
+   ------------------------------------------------- */
+const oldFilterAndRender = filterAndRender;
+filterAndRender = () => {
+  oldFilterAndRender();
+  renderPopularCategories(); // <--- обновляем каждый раз
+};
+
+const oldShowScreen = showScreen;
+showScreen = (id) => {
+  oldShowScreen(id);
+  if (id === "main") {
+    setTimeout(() => {
+      renderPopularCategories(); // гарантируем отрисовку после появления экрана
+    }, 150);
+  }
+};
