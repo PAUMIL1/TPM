@@ -202,22 +202,26 @@ const filterAndRender = () => {
 };
 
 // ===================================================================
-// 8. КАТЕГОРИИ
+// 8. КАТЕГОРИИ — ПЛИТКИ
 // ===================================================================
 const renderCategories = () => {
   const categories = [...new Set(apps.map((app) => app.category))];
-  const list = document.getElementById("category-list");
-  list.innerHTML = "";
+  const grid = document.getElementById("categories-grid");
+  if (!grid) return;
 
-  categories.forEach((category) => {
-    const li = document.createElement("li");
-    li.textContent = category;
-    li.onclick = () => {
-      currentCategory = category;
+  grid.innerHTML = "";
+
+  categories.forEach((cat) => {
+    const tile = document.createElement("div");
+    tile.className = "category-tile";
+    tile.textContent = cat;
+    tile.dataset.cat = cat; // для цвета
+    tile.onclick = () => {
+      currentCategory = cat;
       filterAndRender();
       showScreen("main");
     };
-    list.appendChild(li);
+    grid.appendChild(tile);
   });
 };
 
@@ -312,18 +316,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   };
 
   // Навигация
+  // В DOMContentLoaded
   document.getElementById("categories-btn").onclick = () => {
     renderCategories();
     showScreen("categories");
   };
 
-  profileBtn.onclick = () => {
-    alert("Профиль (муляж) — будет доступен позже");
-  };
-
   document.getElementById("back-categories").onclick = () => {
     currentCategory = null;
     showScreen("main");
+  };
+
+  profileBtn.onclick = () => {
+    alert("Профиль (муляж) — будет доступен позже");
   };
 
   document.getElementById("back-btn").onclick = () => showScreen("main");
@@ -473,21 +478,109 @@ const renderPopularCategories = () => {
   }
 };
 
-/* -------------------------------------------------
-   Добавляем вызов в filterAndRender и в showScreen
-   ------------------------------------------------- */
+// ===================================================================
+// 14. РЕНДЕР НОВЫХ РАЗДЕЛОВ (2×2)
+// ===================================================================
+
+const renderGridApps = (appList, containerId) => {
+  const container = document.getElementById(containerId);
+  if (!container || !appList.length) {
+    if (container)
+      container.innerHTML =
+        "<p style='color:#888; text-align:center; grid-column:1/-1;'>Нет данных</p>";
+    return;
+  }
+
+  container.innerHTML = "";
+  appList.slice(0, 4).forEach((app) => {
+    const card = document.createElement("div");
+    card.className = "app-grid-card";
+    card.innerHTML = `
+      <img src="${app.icon}" alt="${app.name}">
+      <div class="app-grid-info">
+        <div class="app-grid-name">${app.name}</div>
+        <div class="app-grid-dev">${app.developer}</div>
+      </div>
+      <div class="app-grid-rating">${app.rating}</div>
+    `;
+    card.onclick = () => showAppDetail(app);
+    container.appendChild(card);
+  });
+};
+
+// === Функции получения данных ===
+const getFreeApps = () => {
+  // В data.json нет поля price — имитируем: первые 4 — бесплатные
+  return apps.filter((a) => a.id <= 4).slice(0, 4);
+};
+
+const getPaidApps = () => {
+  // Имитируем платные: остальные
+  return apps.filter((a) => a.id > 4).slice(0, 4);
+};
+
+// === Обновление filterAndRender ===
 const oldFilterAndRender = filterAndRender;
 filterAndRender = () => {
   oldFilterAndRender();
-  renderPopularCategories(); // <--- обновляем каждый раз
+
+  renderGridApps(getPopularApps(), "popular-apps-grid");
+  renderGridApps(getNewApps(), "new-apps-grid");
+  renderGridApps(getFreeApps(), "free-apps-grid");
+  renderGridApps(getPaidApps(), "paid-apps-grid");
+
+  renderPopularCategories();
 };
 
+// === Обновление showScreen ===
 const oldShowScreen = showScreen;
 showScreen = (id) => {
   oldShowScreen(id);
   if (id === "main") {
     setTimeout(() => {
-      renderPopularCategories(); // гарантируем отрисовку после появления экрана
+      filterAndRender();
+      if (document.getElementById("carousel-track").children.length === 0) {
+        initBannersCarousel();
+      }
+    }, 150);
+  }
+};
+
+// ===================================================================
+// 15. ФИНАЛЬНОЕ ПЕРЕОПРЕДЕЛЕНИЕ filterAndRender и showScreen (ОДИН РАЗ!)
+// ===================================================================
+
+// Сохраняем оригинальные функции ОДИН РАЗ
+const originalFilterAndRender = filterAndRender;
+const originalShowScreen = showScreen;
+
+// === НОВЫЙ filterAndRender (включает ВСЁ: старое + новые грид-разделы + категории) ===
+filterAndRender = () => {
+  originalFilterAndRender(); // Вызываем старую логику (поиск, фильтры, списки)
+
+  // Новые 2×2 грид-разделы
+  renderGridApps(getPopularApps(), "popular-apps-grid");
+  renderGridApps(getNewApps(), "new-apps-grid");
+  renderGridApps(getFreeApps(), "free-apps-grid");
+  renderGridApps(getPaidApps(), "paid-apps-grid");
+
+  // Обновляем популярные категории
+  renderPopularCategories();
+};
+
+// === НОВЫЙ showScreen (гарантирует инициализацию при переходе на main) ===
+showScreen = (id) => {
+  originalShowScreen(id); // Показываем экран
+
+  if (id === "main") {
+    setTimeout(() => {
+      filterAndRender(); // Обновляем все данные
+
+      // Инициализируем карусель, если ещё не сделано
+      const track = document.getElementById("carousel-track");
+      if (track && track.children.length === 0) {
+        initBannersCarousel();
+      }
     }, 150);
   }
 };

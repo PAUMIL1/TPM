@@ -82,18 +82,32 @@
         </div>
       </div>
 
-      <!-- Остальной контент -->
-      <h2>Популярные</h2>
-      <div id="popular-apps" class="app-list"></div>
+      <!-- НОВЫЕ РАЗДЕЛЫ: 2×2 сетка -->
+      <div class="apps-sections">
+        <!-- Популярные приложения -->
+        <div class="apps-section">
+          <h2 class="section-title">Популярные приложения</h2>
+          <div id="popular-apps-grid" class="apps-grid"></div>
+        </div>
 
-      <h2>Новинки</h2>
-      <div id="new-apps" class="app-list"></div>
+        <!-- Новые приложения -->
+        <div class="apps-section">
+          <h2 class="section-title">Новые приложения</h2>
+          <div id="new-apps-grid" class="apps-grid"></div>
+        </div>
 
-      <h2>Вы недавно смотрели</h2>
-      <div id="recent-apps" class="app-list"></div>
+        <!-- Топ бесплатных -->
+        <div class="apps-section">
+          <h2 class="section-title">Топ бесплатных приложений</h2>
+          <div id="free-apps-grid" class="apps-grid"></div>
+        </div>
 
-      <h2>Все приложения</h2>
-      <div id="app-list" class="app-list"></div>
+        <!-- Топ платных -->
+        <div class="apps-section">
+          <h2 class="section-title">Топ платных приложений</h2>
+          <div id="paid-apps-grid" class="apps-grid"></div>
+        </div>
+      </div>
     </section>
 
     <!-- ============================================= -->
@@ -129,17 +143,17 @@
     </section>
 
     <!-- ============================================= -->
-    <!-- 5. ЭКРАН КАТЕГОРИЙ -->
+    <!-- 5. ЭКРАН КАТЕГОРИЙ (ПЛИТКИ) -->
     <!-- ============================================= -->
     <section id="categories" class="screen">
       <!-- Кнопка возврата -->
-      <button id="back-categories">Назад</button>
+      <button id="back-categories" class="back-btn">Назад</button>
 
       <!-- Заголовок -->
-      <h1>Категории</h1>
+      <h1 class="categories-title">Категории</h1>
 
-      <!-- Список категорий -->
-      <ul id="category-list"></ul>
+      <!-- Сетка плиток -->
+      <div id="categories-grid" class="categories-grid"></div>
     </section>
 
     <!-- ============================================= -->
