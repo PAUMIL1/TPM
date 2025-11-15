@@ -948,3 +948,98 @@ header {
 .screen:not(#splash) {
   padding-top: 48px !important; /* Под статус-бар: время, батарея, сеть */
 }
+
+/* ===================================================================
+   23. НИЖНЕЕ МЕНЮ УПРАВЛЕНИЯ (НАВИГАЦИОННАЯ ПАНЕЛЬ)
+   =================================================================== */
+#bottom-nav {
+  position: fixed;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  justify-content: space-around; /* Равномерное распределение */
+  align-items: center;
+  height: 72px;
+  padding: 0 24px; /* Больше места по бокам — теперь 3 элемента */
+  border-radius: 36px;
+  background: linear-gradient(135deg, #ffffff, #dedede);
+  border: 1px solid #ddd;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  box-sizing: border-box;
+}
+
+/* === ОТСТУПЫ КОНТЕНТА === */
+.screen:not(#splash),
+#main,
+#categories,
+#app-detail {
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+  padding-bottom: 96px !important; /* 72px + 12px + 12px */
+}
+
+/* Сплеш-экран */
+#splash {
+  padding: 20px !important;
+}
+
+/* Адаптивность (мобильные ≤ 440px) */
+@media (max-width: 440px) {
+  #bottom-nav {
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    height: 66px;
+    padding: 0 20px; /* Меньше, но всё ещё комфортно */
+    border-radius: 33px;
+  }
+
+  .screen:not(#splash),
+  #main,
+  #categories,
+  #app-detail {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    padding-bottom: 88px !important;
+  }
+
+  .nav-item img {
+    width: 26px;
+    height: 26px;
+  }
+
+  .nav-item {
+    font-size: 11.5px;
+    gap: 5px;
+  }
+}
+
+/* === Кнопки навигации === */
+.nav-item {
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  font-size: 12.5px;
+  color: #555;
+  cursor: pointer;
+  transition: color 0.2s;
+  flex: 1;
+}
+
+.nav-item img {
+  width: 28px;
+  height: 28px;
+}
+
+.nav-item:hover {
+  color: #0077ff;
+}
+
+.nav-item:active {
+  transform: scale(0.95);
+}
