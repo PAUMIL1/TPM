@@ -163,15 +163,14 @@ const getNewApps = () => {
 };
 
 // ===================================================================
-// 7. ФИЛЬТРАЦИЯ, ПОИСК И СОРТИРОВКА
+// 7. ФИЛЬТРАЦИЯ, ПОИСК И СОРТИРОВКА (БЕЗОПАСНАЯ ВЕРСИЯ)
 // ===================================================================
 const filterAndRender = () => {
   let filtered = [...apps];
 
-  // Поиск по названию
-  const searchQuery = document
-    .getElementById("search-input")
-    .value.toLowerCase();
+  // === БЕЗОПАСНЫЙ ПОИСК ===
+  const searchInput = document.getElementById("search-input");
+  const searchQuery = searchInput ? searchInput.value.toLowerCase() : "";
   if (searchQuery) {
     filtered = filtered.filter((app) =>
       app.name.toLowerCase().includes(searchQuery)
@@ -183,8 +182,10 @@ const filterAndRender = () => {
     filtered = filtered.filter((app) => app.category === currentCategory);
   }
 
-  // Сортировка
-  const sortValue = document.getElementById("sort-select").value;
+  // === БЕЗОПАСНАЯ СОРТИРОВКА ===
+  const sortSelect = document.getElementById("sort-select");
+  const sortValue = sortSelect ? sortSelect.value : "name";
+
   if (sortValue === "rating") {
     filtered.sort((a, b) => b.rating - a.rating);
   } else if (sortValue === "new") {
@@ -193,7 +194,7 @@ const filterAndRender = () => {
     filtered.sort((a, b) => a.name.localeCompare(b.name));
   }
 
-  // Рендерим все списки
+  // Рендерим
   renderApps(filtered, "app-list");
   renderApps(getPopularApps(), "popular-apps");
   renderApps(getNewApps(), "new-apps");
@@ -233,8 +234,14 @@ const showScreen = (screenId) => {
     targetScreen.style.display = "block";
   }
 
+  // === ТОЛЬКО НА ГЛАВНОМ ЭКРАНЕ ===
   if (screenId === "main") {
-    filterAndRender();
+    setTimeout(() => {
+      filterAndRender(); // Теперь безопасно
+      if (document.getElementById("carousel-track").children.length === 0) {
+        initBannersCarousel();
+      }
+    }, 100);
   }
 };
 
@@ -248,7 +255,7 @@ const runSplash = () => {
     const startBtn = document.getElementById("start-btn");
 
     setTimeout(() => {
-      const isFirstLaunch = !localStorage.getItem("");
+      const isFirstLaunch = !localStorage.getItem("onboarded");
 
       if (isFirstLaunch) {
         // Анимация: логотип вверх
@@ -268,7 +275,6 @@ const runSplash = () => {
           setTimeout(() => {
             splash.style.display = "none";
             showScreen("main");
-            setTimeout(runDemo, 500);
             resolve();
           }, 1200);
         };
@@ -286,7 +292,7 @@ const runSplash = () => {
 };
 
 // ===================================================================
-// 11. ИНИЦИАЛИЗАЦИЯ ПРИЛОЖЕНИЯ (добавлена проверка фото профиля)
+// 11. ИНИЦИАЛИЗАЦИЯ ПРИЛОЖЕНИЯ (добавлен запуск карусели + защита)
 // ===================================================================
 document.addEventListener("DOMContentLoaded", async () => {
   await loadData();
@@ -295,14 +301,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   // --- Профиль: проверяем наличие фото ---
   const profileBtn = document.getElementById("profile-btn");
   const profileImg = document.createElement("img");
-  profileImg.src = "images/profile.jpg"; // Путь к фото в папке проекта
+  profileImg.src = "images/profile.jpg";
   profileImg.alt = "Профиль";
   profileImg.onload = () => {
-    profileBtn.innerHTML = ""; // Очищаем иконку-заглушку
+    profileBtn.innerHTML = "";
     profileBtn.appendChild(profileImg);
   };
   profileImg.onerror = () => {
-    // Если фото нет — оставляем заглушкой (уже есть в CSS)
     console.log("Фото профиля не найдено: images/profile.jpg");
   };
 
@@ -327,4 +332,85 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("search-input").oninput = filterAndRender;
   const sortSelect = document.getElementById("sort-select");
   if (sortSelect) sortSelect.onchange = filterAndRender;
+
+  // Запуск карусели при показе main
+  const oldShowScreen = showScreen;
+  showScreen = (id) => {
+    oldShowScreen(id);
+    if (id === "main") {
+      setTimeout(() => {
+        if (document.getElementById("carousel-track").children.length === 0) {
+          initBannersCarousel();
+        }
+      }, 200);
+    }
+  };
 });
+
+// ===================================================================
+// 12. КАРУСЕЛЬ БАННЕРОВ — ГАРАНТИРОВАННАЯ РАБОТА
+// ===================================================================
+let currentSlide = 0;
+let carouselInterval = null;
+
+const initBannersCarousel = () => {
+  const track = document.getElementById("carousel-track");
+  const dots = document.getElementById("carousel-dots");
+  if (!track || !dots) return;
+
+  // Берём 4 приложения с баннерами
+  const appsWithBanners = apps.filter(
+    (a) => a.screenshots && a.screenshots.length > 0
+  );
+  if (appsWithBanners.length === 0) {
+    console.warn("Нет баннеров");
+    return;
+  }
+
+  track.innerHTML = "";
+  dots.innerHTML = "";
+
+  appsWithBanners.slice(0, 4).forEach((app, i) => {
+    // Слайд
+    const slide = document.createElement("div");
+    slide.className = "carousel-slide";
+    slide.innerHTML = `<img src="${app.screenshots[0]}" alt="${app.name}" loading="lazy">`;
+    slide.onclick = () => showAppDetail(app);
+    track.appendChild(slide);
+
+    // Точка
+    const dot = document.createElement("div");
+    dot.className = "carousel-dot" + (i === 0 ? " active" : "");
+    dot.onclick = () => goToSlide(i);
+    dots.appendChild(dot);
+  });
+
+  document.getElementById("carousel-prev").onclick = () => changeSlide(-1);
+  document.getElementById("carousel-next").onclick = () => changeSlide(1);
+
+  goToSlide(0);
+  startCarouselAutoplay();
+};
+
+const goToSlide = (n) => {
+  const total = document.querySelectorAll(".carousel-slide").length;
+  currentSlide = (n + total) % total;
+  document.getElementById("carousel-track").style.transform = `translateX(-${
+    currentSlide * 100
+  }%)`;
+  document
+    .querySelectorAll(".carousel-dot")
+    .forEach((d, i) => d.classList.toggle("active", i === currentSlide));
+};
+
+const changeSlide = (dir) => {
+  goToSlide(currentSlide + dir);
+  resetCarouselAutoplay();
+};
+const startCarouselAutoplay = () => {
+  carouselInterval = setInterval(() => changeSlide(1), 5000);
+};
+const resetCarouselAutoplay = () => {
+  clearInterval(carouselInterval);
+  startCarouselAutoplay();
+};

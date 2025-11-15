@@ -34,7 +34,7 @@
     </section>
 
     <!-- ============================================= -->
-    <!-- 3. ГЛАВНЫЙ ЭКРАН (обновлённая шапка с иконками и отступом) -->
+    <!-- 3. ГЛАВНЫЙ ЭКРАН (обновлённая шапка с иконками и отступом + БАННЕРЫ) -->
     <!-- ============================================= -->
     <section id="main" class="screen">
       <!-- Шапка: поиск, категории, профиль -->
@@ -50,13 +50,12 @@
         </button>
       </header>
 
-      <!-- === НОВЫЙ БЛОК: АВТОПРОКРУЧИВАЮЩИЙСЯ БАННЕР === -->
-      <div class="banner-container">
-        <div class="banner-slider" id="banner-slider">
-          <!-- Слайды будут добавлены динамически через JS -->
-        </div>
-        <!-- Индикаторы (точки) -->
-        <div class="banner-indicators" id="banner-indicators"></div>
+      <!-- БАННЕРЫ (КАРУСЕЛЬ) -->
+      <div id="banners-carousel" class="banners-carousel">
+        <div class="carousel-track" id="carousel-track"></div>
+        <button class="carousel-prev" id="carousel-prev">‹</button>
+        <button class="carousel-next" id="carousel-next">›</button>
+        <div class="carousel-dots" id="carousel-dots"></div>
       </div>
 
       <!-- Остальной контент -->
