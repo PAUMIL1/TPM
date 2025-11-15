@@ -1,3 +1,26 @@
+/* === ПОДКЛЮЧЕНИЕ КАСТОМНОГО ШРИФТА === */
+@font-face {
+  font-family: "VK_Sans";
+  src: url("fonts/VK_Sans_Display_Regular.ttf") format("Regular"),
+    url("fonts/VKSansDisplay-Medium.ttf") format("Medium"),
+    url("fonts/VKSansDisplay-Bold.ttf") format("Bold");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap; /* ← важно: шрифт не блокирует рендер */
+}
+
+/* === ГЛОБАЛЬНЫЙ ШРИФТ === */
+body,
+h1,
+h2,
+h3,
+p,
+button,
+input,
+select {
+  font-family: "VK_Sans", sans-serif;
+}
+
 /* === СКРЫТЬ ВСЁ ДО ЗАГРУЗКИ === */
 .screen {
   display: none;
@@ -15,10 +38,14 @@
   height: 100%;
   background: white;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
   z-index: 9999;
   transition: opacity 1.2s ease-out;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
 }
 
 #splash.fade-out {
@@ -28,13 +55,20 @@
 
 /* === ЛОГОТИП — ТОЛЬКО ДВИЖЕНИЕ ВВЕРХ, БЕЗ ИЗМЕНЕНИЯ РАЗМЕРА === */
 #shared-logo {
-  width: 350px; /* фиксированный размер */
+  width: clamp(280px, 80vw, 480px); /* ОГРОМНЫЙ */
   height: auto;
-  transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10;
 }
 
-#shared-logo.to-onboarding {
-  transform: translateY(-180px);
+/* После добавления класса — поднимается вверх */
+#splash.show-onboarding #shared-logo {
+  top: clamp(60px, 12vh, 100px);
+  transform: translateX(-50%);
 }
 
 /* === ТЕКСТ И КНОПКА — ПОЯВЛЯЮТСЯ ОДНОВРЕМЕННО === */
@@ -70,22 +104,23 @@
 
 /* === КНОПКА "НАЧАТЬ" — СЕРАЯ ФАЗА + ПЛАВНЫЙ ПЕРЕХОД В СИНИЙ === */
 #start-btn {
-  padding: 16px 50px;
-  font-size: 20px;
+  padding: 14px 20px; /* ← УЗКАЯ КНОПКА */
+  font-size: clamp(14px, 4vw, 17px);
   font-weight: 600;
   border: none;
-  border-radius: 30px;
-  cursor: not-allowed;
+  border-radius: 25px;
   background: #ccc;
   color: #666;
-  margin-top: 60px;
+  cursor: not-allowed;
   opacity: 0;
   transform: translateY(20px) scale(0.9);
-  /* Появление + масштабирование — сразу */
-  transition: opacity 0.6s ease-out 0.4s, transform 0.6s ease-out 0.4s;
+  transition: all 0.6s ease-out 0.4s;
+  align-self: center;
+  width: fit-content; /* ← КЛЮЧ! Только по содержимому */
+  min-width: 120px;
+  margin-top: 200px;
 }
 
-/* Активное состояние — включается через JS с задержкой 900мс */
 #start-btn.active {
   opacity: 1;
   transform: translateY(0) scale(1.05);
@@ -93,10 +128,7 @@
   color: white;
   cursor: pointer;
   box-shadow: 0 8px 25px rgba(0, 119, 255, 0.4);
-  /* Цвета и тень — плавно, но с ТОЙ ЖЕ задержкой, что и opacity */
-  transition: opacity 0.6s ease-out 0.4s, transform 0.6s ease-out 0.4s,
-    background 0.6s ease-out 0.4s, color 0.6s ease-out 0.4s,
-    box-shadow 0.6s ease-out 0.4s;
+  transition: all 0.6s ease-out 0.4s;
 }
 
 #start-btn.active:hover {
@@ -108,24 +140,28 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   text-align: center;
   width: 100%;
   max-width: 400px;
-  padding: 20px;
+  padding: 30px 20px; /* ← ТОЛЬКО 30px сверху/снизу */
+  gap: 8px;
+  box-sizing: border-box;
+  margin: 0 auto;
 }
 
 .welcome-text {
-  font-size: 28px;
+  font-size: clamp(22px, 6vw, 28px);
   font-weight: 600;
-  margin: 20px 0 0;
+  margin: 0;
   color: #333;
+  line-height: 1.2;
 }
 
 .subtext {
-  font-size: 16px;
-  margin: 10px 0 0;
+  font-size: clamp(14px, 4vw, 16px);
+  margin: 0;
   color: #666;
+  line-height: 1.2;
 }
 /* === КОНЕЦ ОНБОРДИНГА === */
 
@@ -262,5 +298,22 @@ button {
   button {
     width: 100%;
     margin-bottom: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .onboarding-container {
+    padding: 25px 15px;
+    gap: 14px;
+  }
+  #shared-logo {
+    width: clamp(200px, 50vw, 300px);
+  }
+}
+
+@media (max-height: 600px) {
+  .onboarding-container {
+    padding: 20px 15px;
+    gap: 12px;
   }
 }
