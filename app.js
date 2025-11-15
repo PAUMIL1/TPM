@@ -1,25 +1,30 @@
-let apps = [],
-  currentCategory = null;
-let history = [],
-  views = {};
+// ===================================================================
+// 1. ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
+// ===================================================================
+let apps = []; // Все приложения из data.json
+let currentCategory = null; // Текущая выбранная категория
+let history = []; // История просмотров (ID)
+let views = {}; // Счётчик просмотров по ID
 
-/* ------------------- 1. Загрузка данных ------------------- */
+// ===================================================================
+// 2. ЗАГРУЗКА ДАННЫХ
+// ===================================================================
 const loadData = async () => {
   try {
-    const res = await fetch("data.json");
-    if (!res.ok) throw new Error("Не удалось загрузить data.json");
-    apps = await res.json();
-  } catch (e) {
-    console.error(e);
-    apps = []; // fallback
+    const response = await fetch("data.json");
+    if (!response.ok) throw new Error("Не удалось загрузить data.json");
+    apps = await response.json();
+  } catch (error) {
+    console.error("Ошибка загрузки данных:", error);
+    apps = [];
     setTimeout(showLoadError, 500);
   }
 };
 
 const showLoadError = () => {
-  const main = document.getElementById("main");
-  if (main && main.style.display !== "none") {
-    main.innerHTML = `
+  const mainScreen = document.getElementById("main");
+  if (mainScreen && mainScreen.style.display !== "none") {
+    mainScreen.innerHTML = `
       <div style="text-align:center;padding:40px;color:#d00;">
         <h3>Ошибка загрузки</h3>
         <p>Не удалось загрузить приложения.</p>
@@ -31,37 +36,44 @@ const showLoadError = () => {
   }
 };
 
-/* ------------------- 2. Рендер карточек ------------------- */
-const renderApps = (list, containerId) => {
+// ===================================================================
+// 3. РЕНДЕР КАРТОЧЕК ПРИЛОЖЕНИЙ
+// ===================================================================
+const renderApps = (appList, containerId) => {
   const container = document.getElementById(containerId);
   if (!container) return;
 
-  // скелетон
+  // Показываем скелетон
   container.innerHTML = "";
   for (let i = 0; i < 6; i++) {
-    const s = document.createElement("div");
-    s.className = "skeleton";
-    container.appendChild(s);
+    const skeleton = document.createElement("div");
+    skeleton.className = "skeleton";
+    container.appendChild(skeleton);
   }
 
+  // Имитация задержки загрузки
   setTimeout(() => {
     container.innerHTML = "";
-    list.forEach((app) => {
+    appList.forEach((app) => {
       const card = document.createElement("div");
       card.className = "app-card";
       card.innerHTML = `
         <img src="${app.icon}" alt="${app.name}">
         <h3>${app.name}</h3>
         <p>Оценка: ${app.rating}</p>
-        <p>Категория: ${app.category}</p>`;
+        <p>Категория: ${app.category}</p>
+      `;
       card.onclick = () => showAppDetail(app);
       container.appendChild(card);
     });
   }, 1000);
 };
 
-/* ------------------- 3. Детальная карточка ------------------- */
+// ===================================================================
+// 4. ДЕТАЛЬНАЯ СТРАНИЦА ПРИЛОЖЕНИЯ
+// ===================================================================
 const showAppDetail = (app) => {
+  // Заполняем основную информацию
   document.getElementById("app-icon").src = app.icon;
   document.getElementById("app-name").textContent = app.name;
   document.getElementById(
@@ -74,87 +86,133 @@ const showAppDetail = (app) => {
   document.getElementById("app-age").textContent = `Возраст: ${app.age}`;
   document.getElementById("app-description").textContent = app.description;
 
-  const screenshots = document.getElementById("screenshots");
-  screenshots.innerHTML = "";
+  // Скриншоты
+  const screenshotsContainer = document.getElementById("screenshots");
+  screenshotsContainer.innerHTML = "";
   app.screenshots.forEach((src) => {
     const img = document.createElement("img");
     img.src = src;
     img.onclick = () => openGallery(app.screenshots);
-    screenshots.appendChild(img);
+    screenshotsContainer.appendChild(img);
   });
 
-  const similar = apps
+  // Похожие приложения
+  const similarApps = apps
     .filter((a) => a.category === app.category && a.id !== app.id)
     .slice(0, 5);
-  renderApps(similar, "similar-apps");
+  renderApps(similarApps, "similar-apps");
 
+  // Обновляем историю и просмотры
   addToHistory(app.id);
+
+  // Переключаемся на экран
   showScreen("app-detail");
 };
 
-/* ------------------- 4. Галерея ------------------- */
+// ===================================================================
+// 5. ГАЛЕРЕЯ СКРИНШОТОВ
+// ===================================================================
 const openGallery = (images) => {
   const modal = document.getElementById("gallery-modal");
   const gallery = document.getElementById("gallery-images");
   gallery.innerHTML = "";
+
   images.forEach((src) => {
     const img = document.createElement("img");
     img.src = src;
     gallery.appendChild(img);
   });
+
   modal.style.display = "flex";
-  document.getElementById("close-gallery").onclick = () =>
-    (modal.style.display = "none");
+  document.getElementById("close-gallery").onclick = () => {
+    modal.style.display = "none";
+  };
 };
 
-/* ------------------- 5. История / Популярные / Новые ------------------- */
-const addToHistory = (id) => {
+// ===================================================================
+// 6. ИСТОРИЯ И ПОПУЛЯРНОСТЬ
+// ===================================================================
+const addToHistory = (appId) => {
+  // Загружаем текущую историю
   history = JSON.parse(localStorage.getItem("history") || "[]");
-  if (!history.includes(id)) {
-    history.push(id);
+  if (!history.includes(appId)) {
+    history.push(appId);
     localStorage.setItem("history", JSON.stringify(history));
   }
+
+  // Увеличиваем счётчик просмотров
   views = JSON.parse(localStorage.getItem("views") || "{}");
-  views[id] = (views[id] || 0) + 1;
+  views[appId] = (views[appId] || 0) + 1;
   localStorage.setItem("views", JSON.stringify(views));
 };
 
-const getRecent = () => apps.filter((a) => history.includes(a.id)).slice(-5);
-const getPopular = () =>
-  [...apps].sort((a, b) => (views[b.id] || 0) - (views[a.id] || 0)).slice(0, 5);
-const getNew = () =>
-  [...apps].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
-
-/* ------------------- 6. Фильтрация и рендер ------------------- */
-const filterAndRender = () => {
-  let filtered = apps;
-  const q = document.getElementById("search-input").value.toLowerCase();
-  if (q) filtered = filtered.filter((a) => a.name.toLowerCase().includes(q));
-  if (currentCategory)
-    filtered = filtered.filter((a) => a.category === currentCategory);
-
-  const sort = document.getElementById("sort-select").value;
-  if (sort === "rating") filtered.sort((a, b) => b.rating - a.rating);
-  else if (sort === "new")
-    filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
-  else filtered.sort((a, b) => a.name.localeCompare(b.name));
-
-  renderApps(filtered, "app-list"); // ← исправлено!
-  renderApps(getPopular(), "popular-apps");
-  renderApps(getNew(), "new-apps");
-  renderApps(getRecent(), "recent-apps");
+const getRecentApps = () => {
+  return apps.filter((app) => history.includes(app.id)).slice(-5);
 };
 
-/* ------------------- 7. Категории ------------------- */
+const getPopularApps = () => {
+  return [...apps]
+    .sort((a, b) => (views[b.id] || 0) - (views[a.id] || 0))
+    .slice(0, 5);
+};
+
+const getNewApps = () => {
+  return [...apps]
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, 5);
+};
+
+// ===================================================================
+// 7. ФИЛЬТРАЦИЯ, ПОИСК И СОРТИРОВКА
+// ===================================================================
+const filterAndRender = () => {
+  let filtered = [...apps];
+
+  // Поиск по названию
+  const searchQuery = document
+    .getElementById("search-input")
+    .value.toLowerCase();
+  if (searchQuery) {
+    filtered = filtered.filter((app) =>
+      app.name.toLowerCase().includes(searchQuery)
+    );
+  }
+
+  // Фильтр по категории
+  if (currentCategory) {
+    filtered = filtered.filter((app) => app.category === currentCategory);
+  }
+
+  // Сортировка
+  const sortValue = document.getElementById("sort-select").value;
+  if (sortValue === "rating") {
+    filtered.sort((a, b) => b.rating - a.rating);
+  } else if (sortValue === "new") {
+    filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+  } else {
+    filtered.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  // Рендерим все списки
+  renderApps(filtered, "app-list");
+  renderApps(getPopularApps(), "popular-apps");
+  renderApps(getNewApps(), "new-apps");
+  renderApps(getRecentApps(), "recent-apps");
+};
+
+// ===================================================================
+// 8. КАТЕГОРИИ
+// ===================================================================
 const renderCategories = () => {
-  const cats = [...new Set(apps.map((a) => a.category))];
+  const categories = [...new Set(apps.map((app) => app.category))];
   const list = document.getElementById("category-list");
   list.innerHTML = "";
-  cats.forEach((c) => {
+
+  categories.forEach((category) => {
     const li = document.createElement("li");
-    li.textContent = c;
+    li.textContent = category;
     li.onclick = () => {
-      currentCategory = c;
+      currentCategory = category;
       filterAndRender();
       showScreen("main");
     };
@@ -162,17 +220,27 @@ const renderCategories = () => {
   });
 };
 
-/* ------------------- 8. Навигация ------------------- */
-const showScreen = (id) => {
-  document
-    .querySelectorAll(".screen")
-    .forEach((s) => (s.style.display = "none"));
-  const screen = document.getElementById(id);
-  if (screen) screen.style.display = "block";
-  if (id === "main") filterAndRender();
+// ===================================================================
+// 9. НАВИГАЦИЯ ПО ЭКРАНАМ
+// ===================================================================
+const showScreen = (screenId) => {
+  document.querySelectorAll(".screen").forEach((screen) => {
+    screen.style.display = "none";
+  });
+
+  const targetScreen = document.getElementById(screenId);
+  if (targetScreen) {
+    targetScreen.style.display = "block";
+  }
+
+  if (screenId === "main") {
+    filterAndRender();
+  }
 };
 
-/* ------------------- СПЛЕШ + ОНБОРДИНГ ------------------- */
+// ===================================================================
+// 10. СПЛЕШ-ЭКРАН И ОНБОРДИНГ
+// ===================================================================
 const runSplash = () => {
   return new Promise((resolve) => {
     const splash = document.getElementById("splash");
@@ -180,20 +248,20 @@ const runSplash = () => {
     const startBtn = document.getElementById("start-btn");
 
     setTimeout(() => {
-      const isFirstLaunch = !localStorage.getItem(""); // Исправлено: было пустое ""
+      const isFirstLaunch = !localStorage.getItem("");
 
       if (isFirstLaunch) {
-        // 1. Логотип уходит вверх
+        // Анимация: логотип вверх
         logo.classList.add("to-onboarding");
-        splash.classList.add("show-onboarding"); // ← Текст и кнопка появляются одновременно
+        splash.classList.add("show-onboarding");
 
-        // 2. Активируем кнопку (фон, цвет, тень) через 0.9 сек
+        // Активация кнопки
         setTimeout(() => {
           startBtn.classList.add("active");
           startBtn.disabled = false;
         }, 400);
 
-        // 3. Клик по кнопке
+        // Клик по "Начать"
         startBtn.onclick = () => {
           localStorage.setItem("onboarded", "true");
           splash.classList.add("fade-out");
@@ -216,12 +284,15 @@ const runSplash = () => {
     }, 700);
   });
 };
-/* ------------------- ИНИЦИАЛИЗАЦИЯ ------------------- */
+
+// ===================================================================
+// 11. ИНИЦИАЛИЗАЦИЯ ПРИЛОЖЕНИЯ
+// ===================================================================
 document.addEventListener("DOMContentLoaded", async () => {
   await loadData();
   await runSplash();
 
-  // Навигация, поиск, категории — как раньше
+  // Навигация
   document.getElementById("categories-btn").onclick = () => {
     renderCategories();
     showScreen("categories");
@@ -231,9 +302,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     currentCategory = null;
     showScreen("main");
   };
+
   document.getElementById("back-btn").onclick = () => showScreen("main");
 
-  /* ---------- поиск и сортировка ---------- */
+  // Поиск и сортировка
   document.getElementById("search-input").oninput = filterAndRender;
   document.getElementById("sort-select").onchange = filterAndRender;
 });

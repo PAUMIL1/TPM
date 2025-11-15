@@ -1,28 +1,43 @@
 <!DOCTYPE html>
 <html lang="ru">
   <head>
+    <!-- ============================================= -->
+    <!-- 1. МЕТАДАННЫЕ И НАСТРОЙКИ СТРАНИЦЫ -->
+    <!-- ============================================= -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>RuStore MVP</title>
     <link rel="stylesheet" href="style.css" />
   </head>
+
   <body>
+    <!-- ============================================= -->
+    <!-- 2. СПЛЕШ-ЭКРАН (ОНБОРДИНГ) -->
+    <!-- ============================================= -->
     <section id="splash" class="screen">
       <div class="onboarding-container">
+        <!-- Логотип -->
         <img
           src="images/logo.png"
           alt="RuStore"
           id="shared-logo"
           class="splash-logo"
         />
+
+        <!-- Текст приветствия -->
         <h1 class="welcome-text">Добро пожаловать</h1>
         <p class="subtext">Откройте для себя мир российских приложений</p>
+
+        <!-- Кнопка запуска -->
         <button id="start-btn">Начать</button>
       </div>
     </section>
 
-    <!-- ГЛАВНЫЙ ЭКРАН -->
+    <!-- ============================================= -->
+    <!-- 3. ГЛАВНЫЙ ЭКРАН -->
+    <!-- ============================================= -->
     <section id="main" class="screen">
+      <!-- Шапка: поиск, сортировка, категории -->
       <header>
         <input
           type="text"
@@ -37,22 +52,31 @@
         <button id="categories-btn">Категории</button>
       </header>
 
+      <!-- Популярные приложения -->
       <h2>Популярные</h2>
       <div id="popular-apps" class="app-list"></div>
 
+      <!-- Новинки -->
       <h2>Новинки</h2>
       <div id="new-apps" class="app-list"></div>
 
+      <!-- Недавно просмотренные -->
       <h2>Вы недавно смотрели</h2>
       <div id="recent-apps" class="app-list"></div>
 
+      <!-- Все приложения -->
       <h2>Все приложения</h2>
       <div id="app-list" class="app-list"></div>
     </section>
 
-    <!-- КАРТОЧКА ПРИЛОЖЕНИЯ -->
+    <!-- ============================================= -->
+    <!-- 4. КАРТОЧКА ПРИЛОЖЕНИЯ (ДЕТАЛЬНАЯ СТРАНИЦА) -->
+    <!-- ============================================= -->
     <section id="app-detail" class="screen">
+      <!-- Кнопка возврата -->
       <button id="back-btn">Назад</button>
+
+      <!-- Основная информация -->
       <div class="app-info">
         <img id="app-icon" src="" alt="" class="large-icon" />
         <h1 id="app-name"></h1>
@@ -62,24 +86,38 @@
         <p id="app-age"></p>
         <p id="app-description"></p>
       </div>
+
+      <!-- Скриншоты -->
       <div class="screenshots" id="screenshots"></div>
+
+      <!-- Похожие приложения -->
       <h2>Похожие приложения</h2>
       <div id="similar-apps" class="app-list"></div>
 
-      <!-- Галерея -->
+      <!-- Галерея (модальное окно) -->
       <div id="gallery-modal" class="modal">
         <span id="close-gallery">×</span>
         <div id="gallery-images"></div>
       </div>
     </section>
 
-    <!-- ЭКРАН КАТЕГОРИЙ -->
+    <!-- ============================================= -->
+    <!-- 5. ЭКРАН КАТЕГОРИЙ -->
+    <!-- ============================================= -->
     <section id="categories" class="screen">
+      <!-- Кнопка возврата -->
       <button id="back-categories">Назад</button>
+
+      <!-- Заголовок -->
       <h1>Категории</h1>
+
+      <!-- Список категорий -->
       <ul id="category-list"></ul>
     </section>
 
+    <!-- ============================================= -->
+    <!-- 6. ПОДКЛЮЧЕНИЕ СКРИПТА -->
+    <!-- ============================================= -->
     <script src="app.js"></script>
   </body>
 </html>
