@@ -296,11 +296,17 @@ const runSplash = () => {
 };
 
 // ===================================================================
-// 11. ИНИЦИАЛИЗАЦИЯ ПРИЛОЖЕНИЯ (добавлен запуск карусели + защита)
+// 11. ИНИЦИАЛИЗАЦИЯ ПРИЛОЖЕНИЯ
 // ===================================================================
 document.addEventListener("DOMContentLoaded", async () => {
   await loadData();
   await runSplash();
+
+  // --- ПОКАЗЫВАЕМ НИЖНЕЕ МЕНЮ СРАЗУ ПОСЛЕ СПЛЕША ---
+  const bottomNav = document.getElementById("bottom-nav");
+  if (bottomNav) {
+    bottomNav.style.display = "flex"; // Включаем отображение
+  }
 
   // --- Профиль: проверяем наличие фото ---
   const profileBtn = document.getElementById("profile-btn");
@@ -316,7 +322,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   };
 
   // Навигация
-  // В DOMContentLoaded
   document.getElementById("categories-btn").onclick = () => {
     renderCategories();
     showScreen("categories");
@@ -347,7 +352,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (document.getElementById("carousel-track").children.length === 0) {
           initBannersCarousel();
         }
+        // Убедимся, что меню видно
+        if (bottomNav) bottomNav.style.display = "flex";
       }, 200);
+    } else if (id !== "splash") {
+      // На всех экранах, кроме сплеша — меню видно
+      if (bottomNav) bottomNav.style.display = "flex";
     }
   };
 });

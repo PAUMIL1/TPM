@@ -953,15 +953,15 @@ header {
    23. НИЖНЕЕ МЕНЮ УПРАВЛЕНИЯ (НАВИГАЦИОННАЯ ПАНЕЛЬ)
    =================================================================== */
 #bottom-nav {
+  display: none; /* СКРЫТО ДО ЗАГРУЗКИ */
   position: fixed;
   bottom: 12px;
   left: 12px;
   right: 12px;
-  display: flex;
-  justify-content: space-around; /* Равномерное распределение */
+  justify-content: space-around;
   align-items: center;
   height: 72px;
-  padding: 0 24px; /* Больше места по бокам — теперь 3 элемента */
+  padding: 0 24px;
   border-radius: 36px;
   background: linear-gradient(135deg, #ffffff, #dedede);
   border: 1px solid #ddd;
