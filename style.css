@@ -178,30 +178,177 @@ select {
   line-height: 1.35;
 }
 
-/* ===================================================================
-   10. ОСНОВНЫЕ ЭЛЕМЕНТЫ ИНТЕРФЕЙСА
+css/* ===================================================================
+   10. ОСНОВНЫЕ ЭЛЕМЕНТЫ ИНТЕРФЕЙСА (обновление шапки + отступы + иконки)
    =================================================================== */
+body {
+  margin: 0;
+  padding: 0;
+}
+#main {
+  padding-top: 48px; /* Отступ под статус-бар (батарея, время, сеть) */
+  padding-left: 12px;
+  padding-right: 12px;
+  box-sizing: border-box;
+}
 header {
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding: 0;
+  position: relative;
+  z-index: 1;
+  align-items: center; /* Вертикальное выравнивание всех элементов */
+  min-height: 52px; /* Фиксированная минимальная высота шапки */
+  padding-top: 4px; /* Добавляем внутренний отступ сверху */
+  padding-bottom: 4px; /* Добавляем внутренний отступ снизу */
 }
-#search-input,
-#sort-select {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  flex: 1;
-  min-width: 120px;
+header::before,
+header::after {
+  content: none; /* Убираем возможные псевдоэлементы */
 }
-button {
-  padding: 10px 15px;
-  background: #0077ff;
-  color: white;
+#search-input {
+  flex: 1 1 200px;
+  min-width: 160px;
+  height: 52px; /* Увеличенная высота */
+  padding: 0 16px;
+  font-size: 16px;
   border: none;
-  border-radius: 5px;
+  border-radius: 30px; /* Увеличенный радиус */
+  background: linear-gradient(135deg, #dedede, #ffffff);
+  color: #222;
+  box-shadow: none;
+  transition: all 0.3s ease;
+  /* Увеличиваем высоту при нажатии, чтобы избежать обрезки */
+  transform: scale(1);
+}
+#search-input:active {
+  transform: scale(0.98);
+  /* При активации увеличиваем z-index и добавляем небольшой отступ */
+  position: relative;
+  z-index: 2;
+}
+#search-input::placeholder {
+  color: #777;
+}
+#search-input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+#categories-btn {
+  flex: 0 0 auto;
+  min-width: 110px;
+  height: 52px;
+  padding: 0 18px;
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  border: none;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #ff3985, #0077ff);
+  color: white;
   cursor: pointer;
+  box-shadow: none;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transform: scale(1);
+  position: relative;
+  z-index: 1;
+}
+#categories-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: none;
+}
+#categories-btn:active {
+  transform: translateY(-1px) scale(0.98);
+  z-index: 2;
+}
+#categories-btn::before {
+  content: "≡"; /* Иконка меню (можно заменить на SVG) */
+  font-size: 18px;
+}
+
+#profile-btn {
+  flex: 0 0 auto;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: #ccc center/cover no-repeat;
+  cursor: pointer;
+  box-shadow: none;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  transform: scale(1);
+}
+#profile-btn:hover {
+  transform: scale(1.06);
+  box-shadow: none;
+}
+#profile-btn:active {
+  transform: scale(0.98);
+  z-index: 2;
+}
+#profile-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Скрываем скролл-бар */
+header::-webkit-scrollbar {
+  display: none;
+}
+header {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Адаптация под целевой экран 430×932 */
+@media (max-width: 440px) {
+  #main {
+    padding-top: 44px; /* Немного меньше для узких экранов */
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  header {
+    gap: 8px;
+    align-items: center;
+    min-height: 48px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+  }
+  #search-input {
+    min-width: 150px;
+    height: 48px;
+    padding: 0 14px;
+    font-size: 15px;
+    border-radius: 28px;
+  }
+  #categories-btn {
+    min-width: 100px;
+    height: 48px;
+    padding: 0 16px;
+    font-size: 15px;
+    border-radius: 28px;
+  }
+  #categories-btn::before {
+    font-size: 17px;
+  }
+  #profile-btn {
+    width: 48px;
+    height: 48px;
+  }
 }
 
 /* ===================================================================

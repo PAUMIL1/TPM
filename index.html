@@ -34,37 +34,41 @@
     </section>
 
     <!-- ============================================= -->
-    <!-- 3. ГЛАВНЫЙ ЭКРАН -->
+    <!-- 3. ГЛАВНЫЙ ЭКРАН (обновлённая шапка с иконками и отступом) -->
     <!-- ============================================= -->
     <section id="main" class="screen">
-      <!-- Шапка: поиск, сортировка, категории -->
+      <!-- Шапка: поиск, категории, профиль -->
       <header>
         <input
           type="text"
           id="search-input"
           placeholder="Поиск по названию..."
         />
-        <select id="sort-select">
-          <option value="name">По имени</option>
-          <option value="rating">По популярности</option>
-          <option value="new">По новизне</option>
-        </select>
         <button id="categories-btn">Категории</button>
+        <button id="profile-btn" aria-label="Профиль">
+          <img src="images/logostankin.png" alt="Профиль" />
+        </button>
       </header>
 
-      <!-- Популярные приложения -->
+      <!-- === НОВЫЙ БЛОК: АВТОПРОКРУЧИВАЮЩИЙСЯ БАННЕР === -->
+      <div class="banner-container">
+        <div class="banner-slider" id="banner-slider">
+          <!-- Слайды будут добавлены динамически через JS -->
+        </div>
+        <!-- Индикаторы (точки) -->
+        <div class="banner-indicators" id="banner-indicators"></div>
+      </div>
+
+      <!-- Остальной контент -->
       <h2>Популярные</h2>
       <div id="popular-apps" class="app-list"></div>
 
-      <!-- Новинки -->
       <h2>Новинки</h2>
       <div id="new-apps" class="app-list"></div>
 
-      <!-- Недавно просмотренные -->
       <h2>Вы недавно смотрели</h2>
       <div id="recent-apps" class="app-list"></div>
 
-      <!-- Все приложения -->
       <h2>Все приложения</h2>
       <div id="app-list" class="app-list"></div>
     </section>

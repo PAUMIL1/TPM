@@ -286,16 +286,34 @@ const runSplash = () => {
 };
 
 // ===================================================================
-// 11. ИНИЦИАЛИЗАЦИЯ ПРИЛОЖЕНИЯ
+// 11. ИНИЦИАЛИЗАЦИЯ ПРИЛОЖЕНИЯ (добавлена проверка фото профиля)
 // ===================================================================
 document.addEventListener("DOMContentLoaded", async () => {
   await loadData();
   await runSplash();
 
+  // --- Профиль: проверяем наличие фото ---
+  const profileBtn = document.getElementById("profile-btn");
+  const profileImg = document.createElement("img");
+  profileImg.src = "images/profile.jpg"; // Путь к фото в папке проекта
+  profileImg.alt = "Профиль";
+  profileImg.onload = () => {
+    profileBtn.innerHTML = ""; // Очищаем иконку-заглушку
+    profileBtn.appendChild(profileImg);
+  };
+  profileImg.onerror = () => {
+    // Если фото нет — оставляем заглушкой (уже есть в CSS)
+    console.log("Фото профиля не найдено: images/profile.jpg");
+  };
+
   // Навигация
   document.getElementById("categories-btn").onclick = () => {
     renderCategories();
     showScreen("categories");
+  };
+
+  profileBtn.onclick = () => {
+    alert("Профиль (муляж) — будет доступен позже");
   };
 
   document.getElementById("back-categories").onclick = () => {
@@ -305,7 +323,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   document.getElementById("back-btn").onclick = () => showScreen("main");
 
-  // Поиск и сортировка
+  // Поиск
   document.getElementById("search-input").oninput = filterAndRender;
-  document.getElementById("sort-select").onchange = filterAndRender;
+  const sortSelect = document.getElementById("sort-select");
+  if (sortSelect) sortSelect.onchange = filterAndRender;
 });
