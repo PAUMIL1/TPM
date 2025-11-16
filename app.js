@@ -1,21 +1,21 @@
 // ===================================================================
-// 1. ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
+// 1. GLOBAL VARIABLES
 // ===================================================================
-let apps = []; // Все приложения из data.json
-let currentCategory = null; // Текущая выбранная категория
-let history = []; // История просмотров (ID)
-let views = {}; // Счётчик просмотров по ID
+let apps = []; // All apps from data.json
+let currentCategory = null; // Current selected category
+let history = []; // View history (IDs)
+let views = {}; // View counter per ID
 
 // ===================================================================
-// 2. ЗАГРУЗКА ДАННЫХ
+// 2. DATA LOADING
 // ===================================================================
 const loadData = async () => {
   try {
     const response = await fetch("data.json");
-    if (!response.ok) throw new Error("Не удалось загрузить data.json");
+    if (!response.ok) throw new Error("Failed to load data.json");
     apps = await response.json();
   } catch (error) {
-    console.error("Ошибка загрузки данных:", error);
+    console.error("Data loading error:", error);
     apps = [];
     setTimeout(showLoadError, 500);
   }
@@ -26,24 +26,24 @@ const showLoadError = () => {
   if (mainScreen && mainScreen.style.display !== "none") {
     mainScreen.innerHTML = `
       <div style="text-align:center;padding:40px;color:#d00;">
-        <h3>Ошибка загрузки</h3>
-        <p>Не удалось загрузить приложения.</p>
+        <h3>Loading Error</h3>
+        <p>Could not load apps.</p>
         <button onclick="location.reload()"
                 style="padding:10px 20px;background:#0077ff;color:white;border:none;border-radius:5px;cursor:pointer;">
-          Перезагрузить
+          Reload
         </button>
       </div>`;
   }
 };
 
 // ===================================================================
-// 3. РЕНДЕР КАРТОЧЕК ПРИЛОЖЕНИЙ
+// 3. RENDER APP CARDS (for similar apps)
 // ===================================================================
 const renderApps = (appList, containerId) => {
   const container = document.getElementById(containerId);
   if (!container) return;
 
-  // Показываем скелетон
+  // Show skeleton
   container.innerHTML = "";
   for (let i = 0; i < 6; i++) {
     const skeleton = document.createElement("div");
@@ -51,7 +51,7 @@ const renderApps = (appList, containerId) => {
     container.appendChild(skeleton);
   }
 
-  // Имитация задержки загрузки
+  // Simulate loading delay
   setTimeout(() => {
     container.innerHTML = "";
     appList.forEach((app) => {
@@ -60,8 +60,8 @@ const renderApps = (appList, containerId) => {
       card.innerHTML = `
         <img src="${app.icon}" alt="${app.name}">
         <h3>${app.name}</h3>
-        <p>Оценка: ${app.rating}</p>
-        <p>Категория: ${app.category}</p>
+        <p>Rating: ${app.rating}</p>
+        <p>Category: ${app.category}</p>
       `;
       card.onclick = () => showAppDetail(app);
       container.appendChild(card);
@@ -70,23 +70,22 @@ const renderApps = (appList, containerId) => {
 };
 
 // ===================================================================
-// 4. ДЕТАЛЬНАЯ СТРАНИЦА ПРИЛОЖЕНИЯ
+// 4. APP DETAIL PAGE
 // ===================================================================
 const showAppDetail = (app) => {
-  // Заполняем основную информацию
   document.getElementById("app-icon").src = app.icon;
   document.getElementById("app-name").textContent = app.name;
   document.getElementById(
     "app-developer"
-  ).textContent = `Разработчик: ${app.developer}`;
+  ).textContent = `Developer: ${app.developer}`;
   document.getElementById(
     "app-category"
-  ).textContent = `Категория: ${app.category}`;
-  document.getElementById("app-rating").textContent = `Оценка: ${app.rating}`;
-  document.getElementById("app-age").textContent = `Возраст: ${app.age}`;
+  ).textContent = `Category: ${app.category}`;
+  document.getElementById("app-rating").textContent = `Rating: ${app.rating}`;
+  document.getElementById("app-age").textContent = `Age: ${app.age}`;
   document.getElementById("app-description").textContent = app.description;
 
-  // Скриншоты
+  // Screenshots
   const screenshotsContainer = document.getElementById("screenshots");
   screenshotsContainer.innerHTML = "";
   app.screenshots.forEach((src) => {
@@ -96,21 +95,20 @@ const showAppDetail = (app) => {
     screenshotsContainer.appendChild(img);
   });
 
-  // Похожие приложения
+  // Similar apps
   const similarApps = apps
     .filter((a) => a.category === app.category && a.id !== app.id)
     .slice(0, 5);
   renderApps(similarApps, "similar-apps");
 
-  // Обновляем историю и просмотры
+  // Update history and views
   addToHistory(app.id);
 
-  // Переключаемся на экран
   showScreen("app-detail");
 };
 
 // ===================================================================
-// 5. ГАЛЕРЕЯ СКРИНШОТОВ
+// 5. SCREENSHOT GALLERY
 // ===================================================================
 const openGallery = (images) => {
   const modal = document.getElementById("gallery-modal");
@@ -130,17 +128,15 @@ const openGallery = (images) => {
 };
 
 // ===================================================================
-// 6. ИСТОРИЯ И ПОПУЛЯРНОСТЬ
+// 6. HISTORY + 2x2 GRID FUNCTIONS
 // ===================================================================
 const addToHistory = (appId) => {
-  // Загружаем текущую историю
   history = JSON.parse(localStorage.getItem("history") || "[]");
   if (!history.includes(appId)) {
     history.push(appId);
     localStorage.setItem("history", JSON.stringify(history));
   }
 
-  // Увеличиваем счётчик просмотров
   views = JSON.parse(localStorage.getItem("views") || "{}");
   views[appId] = (views[appId] || 0) + 1;
   localStorage.setItem("views", JSON.stringify(views));
@@ -153,7 +149,7 @@ const getRecentApps = () => {
 const getPopularApps = () => {
   return [...apps]
     .sort((a, b) => (b.downloads || 0) - (a.downloads || 0))
-    .slice(0, 4); // 4 приложения для 2×2 сетки
+    .slice(0, 4);
 };
 
 const getNewApps = () => {
@@ -177,46 +173,43 @@ const getPaidApps = () => {
 };
 
 // ===================================================================
-// 7. ФИЛЬТРАЦИЯ, ПОИСК И СОРТИРОВКА (БЕЗОПАСНАЯ ВЕРСИЯ)
+// 7. RENDER 2x2 GRIDS
 // ===================================================================
-const filterAndRender = () => {
-  let filtered = [...apps];
+const renderGridApps = (appList, containerId) => {
+  const container = document.getElementById(containerId);
+  if (!container) return;
 
-  // === БЕЗОПАСНЫЙ ПОИСК ===
-  const searchInput = document.getElementById("search-input");
-  const searchQuery = searchInput ? searchInput.value.toLowerCase() : "";
-  if (searchQuery) {
-    filtered = filtered.filter((app) =>
-      app.name.toLowerCase().includes(searchQuery)
-    );
+  if (!appList || appList.length === 0) {
+    container.innerHTML = `<p style="color:#888; text-align:center; grid-column:1/-1; padding:20px;">No apps</p>`;
+    return;
   }
 
-  // Фильтр по категории
-  if (currentCategory) {
-    filtered = filtered.filter((app) => app.category === currentCategory);
-  }
+  container.innerHTML = "";
+  appList.forEach((app) => {
+    const price = app.price || 0;
+    const priceHTML =
+      price > 0 ? `<div class="app-grid-price">${price} ₽</div>` : "";
 
-  // === БЕЗОПАСНАЯ СОРТИРОВКА ===
-  const sortSelect = document.getElementById("sort-select");
-  const sortValue = sortSelect ? sortSelect.value : "name";
-
-  if (sortValue === "rating") {
-    filtered.sort((a, b) => b.rating - a.rating);
-  } else if (sortValue === "new") {
-    filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
-  } else {
-    filtered.sort((a, b) => a.name.localeCompare(b.name));
-  }
-
-  // Рендерим
-  renderApps(filtered, "app-list");
-  renderGridApps(getPopularApps(), "popular-apps-grid");
-  renderApps(getNewApps(), "new-apps");
-  renderApps(getRecentApps(), "recent-apps");
+    const card = document.createElement("div");
+    card.className = "app-grid-card";
+    card.innerHTML = `
+      <img src="${app.icon}" alt="${app.name}">
+      <div class="app-grid-info">
+        <div class="app-grid-name">${app.name}</div>
+        <div class="app-grid-dev">${app.developer}</div>
+      </div>
+      <div class="app-grid-rating">
+        ★ ${app.rating}
+        ${priceHTML}
+      </div>
+    `;
+    card.onclick = () => showAppDetail(app);
+    container.appendChild(card);
+  });
 };
 
 // ===================================================================
-// 8. КАТЕГОРИИ — ПЛИТКИ
+// 8. CATEGORIES TILES
 // ===================================================================
 const renderCategories = () => {
   const categories = [...new Set(apps.map((app) => app.category))];
@@ -224,12 +217,11 @@ const renderCategories = () => {
   if (!grid) return;
 
   grid.innerHTML = "";
-
   categories.forEach((cat) => {
     const tile = document.createElement("div");
     tile.className = "category-tile";
     tile.textContent = cat;
-    tile.dataset.cat = cat; // для цвета
+    tile.dataset.cat = cat;
     tile.onclick = () => {
       currentCategory = cat;
       filterAndRender();
@@ -240,7 +232,7 @@ const renderCategories = () => {
 };
 
 // ===================================================================
-// 9. НАВИГАЦИЯ ПО ЭКРАНАМ
+// 9. SCREEN NAVIGATION
 // ===================================================================
 const showScreen = (screenId) => {
   document.querySelectorAll(".screen").forEach((screen) => {
@@ -252,10 +244,9 @@ const showScreen = (screenId) => {
     targetScreen.style.display = "block";
   }
 
-  // === ТОЛЬКО НА ГЛАВНОМ ЭКРАНЕ ===
   if (screenId === "main") {
     setTimeout(() => {
-      filterAndRender(); // Теперь безопасно
+      filterAndRender();
       if (document.getElementById("carousel-track").children.length === 0) {
         initBannersCarousel();
       }
@@ -264,7 +255,7 @@ const showScreen = (screenId) => {
 };
 
 // ===================================================================
-// 10. СПЛЕШ-ЭКРАН И ОНБОРДИНГ
+// 10. SPLASH & ONBOARDING
 // ===================================================================
 const runSplash = () => {
   return new Promise((resolve) => {
@@ -276,17 +267,14 @@ const runSplash = () => {
       const isFirstLaunch = !localStorage.getItem("onboarded");
 
       if (isFirstLaunch) {
-        // Анимация: логотип вверх
         logo.classList.add("to-onboarding");
         splash.classList.add("show-onboarding");
 
-        // Активация кнопки
         setTimeout(() => {
           startBtn.classList.add("active");
           startBtn.disabled = false;
         }, 400);
 
-        // Клик по "Начать"
         startBtn.onclick = () => {
           localStorage.setItem("onboarded", "true");
           splash.classList.add("fade-out");
@@ -297,7 +285,6 @@ const runSplash = () => {
           }, 1200);
         };
       } else {
-        // Пропуск онбординга
         splash.classList.add("fade-out");
         setTimeout(() => {
           splash.style.display = "none";
@@ -310,32 +297,24 @@ const runSplash = () => {
 };
 
 // ===================================================================
-// 11. ИНИЦИАЛИЗАЦИЯ ПРИЛОЖЕНИЯ
+// 11. APP INITIALIZATION
 // ===================================================================
 document.addEventListener("DOMContentLoaded", async () => {
   await loadData();
   await runSplash();
 
-  // --- ПОКАЗЫВАЕМ НИЖНЕЕ МЕНЮ СРАЗУ ПОСЛЕ СПЛЕША ---
   const bottomNav = document.getElementById("bottom-nav");
-  if (bottomNav) {
-    bottomNav.style.display = "flex"; // Включаем отображение
-  }
+  if (bottomNav) bottomNav.style.display = "flex";
 
-  // --- Профиль: проверяем наличие фото ---
   const profileBtn = document.getElementById("profile-btn");
   const profileImg = document.createElement("img");
   profileImg.src = "images/profile.jpg";
-  profileImg.alt = "Профиль";
+  profileImg.alt = "Profile";
   profileImg.onload = () => {
     profileBtn.innerHTML = "";
     profileBtn.appendChild(profileImg);
   };
-  profileImg.onerror = () => {
-    console.log("Фото профиля не найдено: images/profile.jpg");
-  };
 
-  // Навигация
   document.getElementById("categories-btn").onclick = () => {
     renderCategories();
     showScreen("categories");
@@ -347,37 +326,36 @@ document.addEventListener("DOMContentLoaded", async () => {
   };
 
   profileBtn.onclick = () => {
-    alert("Профиль (муляж) — будет доступен позже");
+    alert("Profile (mock) — coming soon");
   };
 
   document.getElementById("back-btn").onclick = () => showScreen("main");
 
-  // Поиск
   document.getElementById("search-input").oninput = filterAndRender;
   const sortSelect = document.getElementById("sort-select");
   if (sortSelect) sortSelect.onchange = filterAndRender;
 
-  // Запуск карусели при показе main
-  const oldShowScreen = showScreen;
+  // Override showScreen
+  const originalShowScreen = showScreen;
   showScreen = (id) => {
-    oldShowScreen(id);
+    originalShowScreen(id);
+
     if (id === "main") {
       setTimeout(() => {
-        if (document.getElementById("carousel-track").children.length === 0) {
+        filterAndRender();
+        const track = document.getElementById("carousel-track");
+        if (track && track.children.length === 0) {
           initBannersCarousel();
         }
-        // Убедимся, что меню видно
-        if (bottomNav) bottomNav.style.display = "flex";
-      }, 200);
-    } else if (id !== "splash") {
-      // На всех экранах, кроме сплеша — меню видно
-      if (bottomNav) bottomNav.style.display = "flex";
+      }, 100);
     }
   };
+
+  showScreen("main");
 });
 
 // ===================================================================
-// 12. КАРУСЕЛЬ БАННЕРОВ — ГАРАНТИРОВАННАЯ РАБОТА
+// 12. BANNER CAROUSEL
 // ===================================================================
 let currentSlide = 0;
 let carouselInterval = null;
@@ -387,27 +365,21 @@ const initBannersCarousel = () => {
   const dots = document.getElementById("carousel-dots");
   if (!track || !dots) return;
 
-  // Берём 4 приложения с баннерами
   const appsWithBanners = apps.filter(
     (a) => a.screenshots && a.screenshots.length > 0
   );
-  if (appsWithBanners.length === 0) {
-    console.warn("Нет баннеров");
-    return;
-  }
+  if (appsWithBanners.length === 0) return;
 
   track.innerHTML = "";
   dots.innerHTML = "";
 
   appsWithBanners.slice(0, 4).forEach((app, i) => {
-    // Слайд
     const slide = document.createElement("div");
     slide.className = "carousel-slide";
     slide.innerHTML = `<img src="${app.screenshots[0]}" alt="${app.name}" loading="lazy">`;
     slide.onclick = () => showAppDetail(app);
     track.appendChild(slide);
 
-    // Точка
     const dot = document.createElement("div");
     dot.className = "carousel-dot" + (i === 0 ? " active" : "");
     dot.onclick = () => goToSlide(i);
@@ -436,22 +408,19 @@ const changeSlide = (dir) => {
   goToSlide(currentSlide + dir);
   resetCarouselAutoplay();
 };
+
 const startCarouselAutoplay = () => {
   carouselInterval = setInterval(() => changeSlide(1), 5000);
 };
+
 const resetCarouselAutoplay = () => {
   clearInterval(carouselInterval);
   startCarouselAutoplay();
 };
 
 // ===================================================================
-// 13. ПОПУЛЯРНЫЕ КАТЕГОРИИ (ТОП-3)
+// 13. POPULAR CATEGORIES (TOP-3)
 // ===================================================================
-
-/**
- * Возвращает массив объектов {category, count}
- * отсортированный по убыванию количества приложений.
- */
 const getTopCategories = () => {
   const counts = {};
   apps.forEach((a) => {
@@ -463,9 +432,6 @@ const getTopCategories = () => {
     .slice(0, 3);
 };
 
-/**
- * Рендерит блок «Популярные категории».
- */
 const renderPopularCategories = () => {
   const container = document.getElementById("popular-categories");
   if (!container) return;
@@ -481,14 +447,9 @@ const renderPopularCategories = () => {
     const card = cards[i];
     if (!card) return;
 
-    // Заполняем данные
     card.dataset.category = cat.category;
     card.querySelector(".category-name").textContent = cat.category;
 
-    // Фон-градиент
-    card.style.setProperty("--cat-bg", bgGradients[i]);
-
-    // Клик → фильтр по категории
     card.onclick = () => {
       currentCategory = cat.category;
       filterAndRender();
@@ -496,114 +457,47 @@ const renderPopularCategories = () => {
     };
   });
 
-  // Скрываем лишние карточки, если топ < 3
   for (let i = top.length; i < cards.length; i++) {
     cards[i].style.display = "none";
   }
 };
 
 // ===================================================================
-// 14. РЕНДЕР НОВЫХ РАЗДЕЛОВ (2×2)
+// 14. FINAL filterAndRender — RENDERS ALL 2x2 GRIDS
 // ===================================================================
+const filterAndRender = () => {
+  let filtered = [...apps];
 
-const renderGridApps = (appList, containerId) => {
-  const container = document.getElementById(containerId);
-  if (!container || !appList.length) {
-    if (container)
-      container.innerHTML =
-        "<p style='color:#888; text-align:center; grid-column:1/-1;'>Нет данных</p>";
-    return;
+  // Search
+  const searchInput = document.getElementById("search-input");
+  const query = searchInput?.value.toLowerCase() || "";
+  if (query) {
+    filtered = filtered.filter(
+      (app) =>
+        app.name.toLowerCase().includes(query) ||
+        app.developer.toLowerCase().includes(query)
+    );
   }
 
-  container.innerHTML = "";
-  appList.forEach((app) => {
-    const price = app.price || 0;
-    const priceHTML =
-      price > 0 ? `<div class="app-grid-price">${price} ₽</div>` : "";
+  // Category filter
+  if (currentCategory) {
+    filtered = filtered.filter((app) => app.category === currentCategory);
+  }
 
-    const card = document.createElement("div");
-    card.className = "app-grid-card";
-    card.innerHTML = `
-      <img src="${app.icon}" alt="${app.name}">
-      <div class="app-grid-info">
-        <div class="app-grid-name">${app.name}</div>
-        <div class="app-grid-dev">${app.developer}</div>
-      </div>
-      <div class="app-grid-rating">
-        ★ ${app.rating}
-        ${priceHTML}
-      </div>
-    `;
-    card.onclick = () => showAppDetail(app);
-    container.appendChild(card);
-  });
-};
+  // Sorting
+  const sortSelect = document.getElementById("sort-select");
+  const sortBy = sortSelect?.value || "name";
+  if (sortBy === "rating") filtered.sort((a, b) => b.rating - a.rating);
+  else if (sortBy === "new")
+    filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+  else filtered.sort((a, b) => a.name.localeCompare(b.name));
 
-// === Обновление filterAndRender ===
-const oldFilterAndRender = filterAndRender;
-filterAndRender = () => {
-  oldFilterAndRender();
-
+  // Render 2x2 grids
   renderGridApps(getPopularApps(), "popular-apps-grid");
   renderGridApps(getNewApps(), "new-apps-grid");
   renderGridApps(getFreeApps(), "free-apps-grid");
   renderGridApps(getPaidApps(), "paid-apps-grid");
 
+  // Popular categories
   renderPopularCategories();
-};
-
-// === Обновление showScreen ===
-const oldShowScreen = showScreen;
-showScreen = (id) => {
-  oldShowScreen(id);
-  if (id === "main") {
-    setTimeout(() => {
-      filterAndRender(); // Обновляем все данные
-
-      // Инициализируем карусель, если ещё не сделано
-      const track = document.getElementById("carousel-track");
-      if (track && track.children.length === 0) {
-        initBannersCarousel();
-      }
-    }, 150);
-  }
-};
-
-// ===================================================================
-// 15. ФИНАЛЬНОЕ ПЕРЕОПРЕДЕЛЕНИЕ filterAndRender и showScreen (ОДИН РАЗ!)
-// ===================================================================
-
-// Сохраняем оригинальные функции ОДИН РАЗ
-const originalFilterAndRender = filterAndRender;
-const originalShowScreen = showScreen;
-
-// === НОВЫЙ filterAndRender (включает ВСЁ: старое + новые грид-разделы + категории) ===
-filterAndRender = () => {
-  originalFilterAndRender(); // Вызываем старую логику (поиск, фильтры, списки)
-
-  // Новые 2×2 грид-разделы
-  renderGridApps(getPopularApps(), "popular-apps-grid");
-  renderGridApps(getNewApps(), "new-apps-grid");
-  renderGridApps(getFreeApps(), "free-apps-grid");
-  renderGridApps(getPaidApps(), "paid-apps-grid");
-
-  // Обновляем популярные категории
-  renderPopularCategories();
-};
-
-// === НОВЫЙ showScreen (гарантирует инициализацию при переходе на main) ===
-showScreen = (id) => {
-  originalShowScreen(id); // Показываем экран
-
-  if (id === "main") {
-    setTimeout(() => {
-      filterAndRender(); // Обновляем все данные
-
-      // Инициализируем карусель, если ещё не сделано
-      const track = document.getElementById("carousel-track");
-      if (track && track.children.length === 0) {
-        initBannersCarousel();
-      }
-    }, 150);
-  }
 };
