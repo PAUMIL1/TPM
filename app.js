@@ -365,18 +365,27 @@ const initBannersCarousel = () => {
   const dots = document.getElementById("carousel-dots");
   if (!track || !dots) return;
 
-  const appsWithBanners = apps.filter(
-    (a) => a.screenshots && a.screenshots.length > 0
-  );
-  if (appsWithBanners.length === 0) return;
+  // Берём приложения с banner !== null
+  const bannerApps = apps.filter((app) => app.banner).slice(0, 4);
+
+  if (bannerApps.length === 0) {
+    console.warn("Нет баннеров (поле banner пустое)");
+    return;
+  }
 
   track.innerHTML = "";
   dots.innerHTML = "";
 
-  appsWithBanners.slice(0, 4).forEach((app, i) => {
+  bannerApps.forEach((app, i) => {
     const slide = document.createElement("div");
     slide.className = "carousel-slide";
-    slide.innerHTML = `<img src="${app.screenshots[0]}" alt="${app.name}" loading="lazy">`;
+    slide.innerHTML = `
+      <img src="${app.banner}" alt="${app.name}" loading="lazy">
+      <div class="carousel-caption">
+        <h3>${app.name}</h3>
+        <p>${app.category}</p>
+      </div>
+    `;
     slide.onclick = () => showAppDetail(app);
     track.appendChild(slide);
 
