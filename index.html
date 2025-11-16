@@ -114,34 +114,47 @@
     <!-- 4. КАРТОЧКА ПРИЛОЖЕНИЯ (ДЕТАЛЬНАЯ СТРАНИЦА) -->
     <!-- ============================================= -->
     <section id="app-detail" class="screen">
-      <!-- Кнопка возврата -->
-      <button id="back-btn">Назад</button>
+      <!-- Кнопка Назад -->
+      <button id="back-btn" class="back-btn">Назад</button>
 
-      <!-- Основная информация -->
-      <div class="app-info">
+      <!-- Заголовок с иконкой -->
+      <div class="app-header">
         <img id="app-icon" src="" alt="" class="large-icon" />
-        <h1 id="app-name"></h1>
-        <p id="app-developer"></p>
-        <p id="app-category"></p>
-        <p id="app-rating"></p>
-        <p id="app-age"></p>
-        <p id="app-description"></p>
+        <div class="app-header-info">
+          <h1 id="app-name"></h1>
+          <p id="app-category" class="app-category"></p>
+          <button id="download-btn" class="download-btn">Скачать</button>
+        </div>
       </div>
 
-      <!-- Скриншоты -->
-      <div class="screenshots" id="screenshots"></div>
+      <!-- Дополнительные детали -->
+      <div class="app-details">
+        <p><strong>Разработчик:</strong> <span id="app-developer"></span></p>
+        <p><strong>Рейтинг:</strong> <span id="app-rating"></span> ★</p>
+        <p><strong>Возраст:</strong> <span id="app-age"></span></p>
+      </div>
+
+      <!-- Скриншоты (выше описания) -->
+      <div class="screenshots-section">
+        <h2>Скриншоты</h2>
+        <div class="screenshots" id="screenshots"></div>
+      </div>
+
+      <!-- Описание (свёрнутое) -->
+      <div class="app-description-section">
+        <h2>Описание</h2>
+        <div id="description-content" class="description-content collapsed">
+          <p id="app-description"></p>
+        </div>
+        <button id="toggle-description" class="toggle-btn">Ещё</button>
+      </div>
 
       <!-- Похожие приложения -->
-      <h2>Похожие приложения</h2>
-      <div id="similar-apps" class="app-list"></div>
-
-      <!-- Галерея (модальное окно) -->
-      <div id="gallery-modal" class="modal">
-        <span id="close-gallery">×</span>
-        <div id="gallery-images"></div>
+      <div class="similar-section">
+        <h2>Похожие приложения</h2>
+        <div id="similar-apps" class="app-list"></div>
       </div>
     </section>
-
     <!-- ============================================= -->
     <!-- 5. ЭКРАН КАТЕГОРИЙ (ПЛИТКИ) -->
     <!-- ============================================= -->

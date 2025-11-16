@@ -75,57 +75,64 @@ const renderApps = (appList, containerId) => {
 const showAppDetail = (app) => {
   document.getElementById("app-icon").src = app.icon;
   document.getElementById("app-name").textContent = app.name;
-  document.getElementById(
-    "app-developer"
-  ).textContent = `Developer: ${app.developer}`;
-  document.getElementById(
-    "app-category"
-  ).textContent = `Category: ${app.category}`;
-  document.getElementById("app-rating").textContent = `Rating: ${app.rating}`;
-  document.getElementById("app-age").textContent = `Age: ${app.age}`;
+  document.getElementById("app-developer").textContent = app.developer;
+  document.getElementById("app-category").textContent = app.category;
+  document.getElementById("app-rating").textContent = app.rating;
+  document.getElementById("app-age").textContent = app.age;
   document.getElementById("app-description").textContent = app.description;
 
-  // Screenshots
+  // Скриншоты — без галереи
   const screenshotsContainer = document.getElementById("screenshots");
   screenshotsContainer.innerHTML = "";
   app.screenshots.forEach((src) => {
     const img = document.createElement("img");
     img.src = src;
-    img.onclick = () => openGallery(app.screenshots);
+    img.alt = `${app.name} screenshot`;
     screenshotsContainer.appendChild(img);
   });
 
-  // Similar apps
+  // Похожие приложения
   const similarApps = apps
     .filter((a) => a.category === app.category && a.id !== app.id)
     .slice(0, 5);
   renderApps(similarApps, "similar-apps");
 
-  // Update history and views
   addToHistory(app.id);
-
   showScreen("app-detail");
+};
+
+const descContent = document.getElementById("description-content");
+const toggleBtn = document.getElementById("toggle-description");
+
+// Сброс состояния
+descContent.classList.remove("expanded");
+descContent.classList.add("collapsed");
+toggleBtn.classList.remove("expanded");
+toggleBtn.classList.add("collapsed");
+toggleBtn.textContent = "Ещё";
+
+// Обработчик
+toggleBtn.onclick = () => {
+  const isCollapsed = descContent.classList.contains("collapsed");
+
+  if (isCollapsed) {
+    descContent.classList.remove("collapsed");
+    descContent.classList.add("expanded");
+    toggleBtn.classList.remove("collapsed");
+    toggleBtn.classList.add("expanded");
+    toggleBtn.textContent = "Свернуть";
+  } else {
+    descContent.classList.remove("expanded");
+    descContent.classList.add("collapsed");
+    toggleBtn.classList.remove("expanded");
+    toggleBtn.classList.add("collapsed");
+    toggleBtn.textContent = "Ещё";
+  }
 };
 
 // ===================================================================
 // 5. SCREENSHOT GALLERY
 // ===================================================================
-const openGallery = (images) => {
-  const modal = document.getElementById("gallery-modal");
-  const gallery = document.getElementById("gallery-images");
-  gallery.innerHTML = "";
-
-  images.forEach((src) => {
-    const img = document.createElement("img");
-    img.src = src;
-    gallery.appendChild(img);
-  });
-
-  modal.style.display = "flex";
-  document.getElementById("close-gallery").onclick = () => {
-    modal.style.display = "none";
-  };
-};
 
 // ===================================================================
 // 6. HISTORY + 2x2 GRID FUNCTIONS

@@ -347,5 +347,19 @@
     "date": "2023-10-01",
     "downloads": 13000000,
     "banner": ["images/banners/max.svg"]
+  },
+  {
+    "id": 99,
+    "name": "Калькулятор",
+    "icon": "images/icons/zoom-icon.svg",
+    "rating": 4.5,
+    "category": "Полезные инструменты",
+    "developer": "RuStore Team",
+    "age": "0+",
+    "description": "Простой и удобный калькулятор для повседневных расчётов. Поддерживает базовые операции, историю и научный режим.",
+    "screenshots": ["images/galery/max.svg"],
+    "date": "2023-10-01",
+    "downloads": 500000,
+    "banner": null
   }
 ]
