@@ -789,18 +789,24 @@ header {
 /* Рейтинг */
 .app-grid-rating {
   display: flex;
-  align-items: center;
-  gap: 4px;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
   font-size: 13px;
   color: #0077ff;
-  font-weight: 500;
+  font-weight: 800;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
 .app-grid-rating::before {
-  content: "★";
-  font-size: 14px;
+  content: none;
+}
+
+.app-grid-price {
+  font-size: 12px;
+  color: #555;
+  font-weight: 800;
 }
 
 /* ===================================================================

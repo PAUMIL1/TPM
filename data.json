@@ -1,8 +1,8 @@
 [
   {
     "id": 1,
-    "name": "VK Messenger",
-    "icon": "images/logostankin.png",
+    "name": "MAX",
+    "icon": "images/icons/Tabor.svg",
     "rating": 4.5,
     "category": "Общение",
     "developer": "VK",
@@ -10,7 +10,8 @@
     "description": "Мессенджер для общения с друзьями.",
     "screenshots": ["images/banners/max.svg"],
     "date": "2023-10-01",
-    "downloads": 25000
+    "downloads": 2500000000,
+    "price": 0
   },
   {
     "id": 2,
@@ -23,7 +24,8 @@
     "description": "Смотрите видео, стримы и музыку.",
     "screenshots": ["images/banners/max.svg"],
     "date": "2023-09-15",
-    "downloads": 45000
+    "downloads": 45000,
+    "price": 0
   },
   {
     "id": 3,
@@ -36,7 +38,8 @@
     "description": "Открытый мир приключений.",
     "screenshots": ["images/banners/max.svg"],
     "date": "2023-11-01",
-    "downloads": 30000
+    "downloads": 30000,
+    "price": 199
   },
   {
     "id": 4,
@@ -49,7 +52,8 @@
     "description": "Официальные услуги онлайн.",
     "screenshots": ["images/banners/max.svg"],
     "date": "2023-08-20",
-    "downloads": 20000
+    "downloads": 20000,
+    "price": 0
   },
   {
     "id": 5,
@@ -62,7 +66,8 @@
     "description": "Управляйте финансами легко.",
     "screenshots": ["images/banners/max.svg"],
     "date": "2023-10-10",
-    "downloads": 40000
+    "downloads": 40000,
+    "price": 0
   },
   {
     "id": 6,
@@ -75,7 +80,8 @@
     "description": "Миллионы товаров по выгодным ценам.",
     "screenshots": ["images/banners/max.svg"],
     "date": "2023-09-01",
-    "downloads": 35000
+    "downloads": 35000,
+    "price": 99
   },
   {
     "id": 7,
@@ -88,7 +94,8 @@
     "description": "Маршруты, пробки, парковки.",
     "screenshots": ["images/banners/max.svg"],
     "date": "2023-10-25",
-    "downloads": 28000
+    "downloads": 28000,
+    "price": 0
   },
   {
     "id": 8,
@@ -101,7 +108,8 @@
     "description": "Простой и удобный калькулятор.",
     "screenshots": ["images/banners/max.svg"],
     "date": "2023-11-10",
-    "downloads": 10000
+    "downloads": 10000,
+    "price": 49
   },
   {
     "id": 9,
@@ -114,7 +122,8 @@
     "description": "Быстрый и безопасный мессенджер.",
     "screenshots": ["images/banners/max.svg"],
     "date": "2023-12-05",
-    "downloads": 60000
+    "downloads": 60000,
+    "price": 0
   },
   {
     "id": 10,
@@ -127,7 +136,8 @@
     "description": "Объявления о продаже и покупке товаров.",
     "screenshots": ["images/banners/max.svg"],
     "date": "2023-11-20",
-    "downloads": 55000
+    "downloads": 55000,
+    "price": 0
   },
   {
     "id": 11,
@@ -140,7 +150,8 @@
     "description": "Слушайте музыку онлайн и оффлайн.",
     "screenshots": ["images/banners/max.svg"],
     "date": "2023-10-15",
-    "downloads": 52000
+    "downloads": 52000,
+    "price": 299
   },
   {
     "id": 12,
@@ -153,6 +164,7 @@
     "description": "Карты, навигация и справочник.",
     "screenshots": ["images/banners/max.svg"],
     "date": "2023-09-30",
-    "downloads": 48000
+    "downloads": 48000,
+    "price": 0
   }
 ]

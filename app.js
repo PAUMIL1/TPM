@@ -159,7 +159,21 @@ const getPopularApps = () => {
 const getNewApps = () => {
   return [...apps]
     .sort((a, b) => new Date(b.date) - new Date(a.date))
-    .slice(0, 5);
+    .slice(0, 4);
+};
+
+const getFreeApps = () => {
+  return apps
+    .filter((a) => (a.price || 0) === 0)
+    .sort((a, b) => b.rating - a.rating)
+    .slice(0, 4);
+};
+
+const getPaidApps = () => {
+  return apps
+    .filter((a) => (a.price || 0) > 0)
+    .sort((a, b) => b.rating - a.rating)
+    .slice(0, 4);
 };
 
 // ===================================================================
@@ -502,7 +516,11 @@ const renderGridApps = (appList, containerId) => {
   }
 
   container.innerHTML = "";
-  appList.slice(0, 4).forEach((app) => {
+  appList.forEach((app) => {
+    const price = app.price || 0;
+    const priceHTML =
+      price > 0 ? `<div class="app-grid-price">${price} ₽</div>` : "";
+
     const card = document.createElement("div");
     card.className = "app-grid-card";
     card.innerHTML = `
@@ -511,22 +529,14 @@ const renderGridApps = (appList, containerId) => {
         <div class="app-grid-name">${app.name}</div>
         <div class="app-grid-dev">${app.developer}</div>
       </div>
-      <div class="app-grid-rating">${app.rating}</div>
+      <div class="app-grid-rating">
+        ★ ${app.rating}
+        ${priceHTML}
+      </div>
     `;
     card.onclick = () => showAppDetail(app);
     container.appendChild(card);
   });
-};
-
-// === Функции получения данных ===
-const getFreeApps = () => {
-  // В data.json нет поля price — имитируем: первые 4 — бесплатные
-  return apps.filter((a) => a.id <= 4).slice(0, 4);
-};
-
-const getPaidApps = () => {
-  // Имитируем платные: остальные
-  return apps.filter((a) => a.id > 4).slice(0, 4);
 };
 
 // === Обновление filterAndRender ===
