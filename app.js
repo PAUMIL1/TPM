@@ -101,6 +101,8 @@ const showAppDetail = (app) => {
       const img = document.createElement("img");
       img.src = src;
       img.alt = `${app.name} screenshot ${i + 1}`;
+      img.style.cursor = "zoom-in"; // курсор-лупа
+      img.onclick = () => openScreenshotModal(src); // ← УВЕЛИЧЕНИЕ
       track.appendChild(img);
 
       const dot = document.createElement("div");
@@ -338,6 +340,33 @@ const runSplash = () => {
 // ===================================================================
 // 11. APP INITIALIZATION
 // ===================================================================
+function openScreenshotModal(src) {
+  const modal = document.getElementById("screenshot-modal");
+  const modalImg = document.getElementById("modal-image");
+  const closeBtn = document.getElementById("close-screenshot");
+
+  modalImg.src = src;
+  modal.classList.add("show");
+  modal.style.display = "flex"; // ← ВАЖНО: включаем display
+
+  // Удаляем старый обработчик и добавляем новый
+  closeBtn.onclick = null;
+  closeBtn.onclick = closeScreenshotModal;
+
+  // Закрытие по клику вне изображения
+  modal.onclick = (e) => {
+    if (e.target === modal) closeScreenshotModal();
+  };
+}
+
+function closeScreenshotModal() {
+  const modal = document.getElementById("screenshot-modal");
+  modal.classList.remove("show");
+  setTimeout(() => {
+    modal.style.display = "none";
+  }, 300);
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   await loadData();
   await runSplash();
