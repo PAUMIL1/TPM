@@ -152,8 +152,8 @@ const getRecentApps = () => {
 
 const getPopularApps = () => {
   return [...apps]
-    .sort((a, b) => (views[b.id] || 0) - (views[a.id] || 0))
-    .slice(0, 5);
+    .sort((a, b) => (b.downloads || 0) - (a.downloads || 0))
+    .slice(0, 4); // 4 приложения для 2×2 сетки
 };
 
 const getNewApps = () => {
@@ -196,7 +196,7 @@ const filterAndRender = () => {
 
   // Рендерим
   renderApps(filtered, "app-list");
-  renderApps(getPopularApps(), "popular-apps");
+  renderGridApps(getPopularApps(), "popular-apps-grid");
   renderApps(getNewApps(), "new-apps");
   renderApps(getRecentApps(), "recent-apps");
 };
@@ -548,8 +548,11 @@ showScreen = (id) => {
   oldShowScreen(id);
   if (id === "main") {
     setTimeout(() => {
-      filterAndRender();
-      if (document.getElementById("carousel-track").children.length === 0) {
+      filterAndRender(); // Обновляем все данные
+
+      // Инициализируем карусель, если ещё не сделано
+      const track = document.getElementById("carousel-track");
+      if (track && track.children.length === 0) {
         initBannersCarousel();
       }
     }, 150);

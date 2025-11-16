@@ -9,7 +9,8 @@
     "age": "12+",
     "description": "Мессенджер для общения с друзьями.",
     "screenshots": ["images/banners/max.svg"],
-    "date": "2023-10-01"
+    "date": "2023-10-01",
+    "downloads": 25000
   },
   {
     "id": 2,
@@ -21,7 +22,8 @@
     "age": "12+",
     "description": "Смотрите видео, стримы и музыку.",
     "screenshots": ["images/banners/max.svg"],
-    "date": "2023-09-15"
+    "date": "2023-09-15",
+    "downloads": 45000
   },
   {
     "id": 3,
@@ -33,7 +35,8 @@
     "age": "12+",
     "description": "Открытый мир приключений.",
     "screenshots": ["images/banners/max.svg"],
-    "date": "2023-11-01"
+    "date": "2023-11-01",
+    "downloads": 30000
   },
   {
     "id": 4,
@@ -45,7 +48,8 @@
     "age": "16+",
     "description": "Официальные услуги онлайн.",
     "screenshots": ["images/banners/max.svg"],
-    "date": "2023-08-20"
+    "date": "2023-08-20",
+    "downloads": 20000
   },
   {
     "id": 5,
@@ -57,7 +61,8 @@
     "age": "0+",
     "description": "Управляйте финансами легко.",
     "screenshots": ["images/banners/max.svg"],
-    "date": "2023-10-10"
+    "date": "2023-10-10",
+    "downloads": 40000
   },
   {
     "id": 6,
@@ -69,7 +74,8 @@
     "age": "12+",
     "description": "Миллионы товаров по выгодным ценам.",
     "screenshots": ["images/banners/max.svg"],
-    "date": "2023-09-01"
+    "date": "2023-09-01",
+    "downloads": 35000
   },
   {
     "id": 7,
@@ -81,7 +87,8 @@
     "age": "0+",
     "description": "Маршруты, пробки, парковки.",
     "screenshots": ["images/banners/max.svg"],
-    "date": "2023-10-25"
+    "date": "2023-10-25",
+    "downloads": 28000
   },
   {
     "id": 8,
@@ -93,6 +100,59 @@
     "age": "0+",
     "description": "Простой и удобный калькулятор.",
     "screenshots": ["images/banners/max.svg"],
-    "date": "2023-11-10"
+    "date": "2023-11-10",
+    "downloads": 10000
+  },
+  {
+    "id": 9,
+    "name": "Telegram",
+    "icon": "images/logostankin.png",
+    "rating": 4.6,
+    "category": "Общение",
+    "developer": "Telegram FZ-LLC",
+    "age": "12+",
+    "description": "Быстрый и безопасный мессенджер.",
+    "screenshots": ["images/banners/max.svg"],
+    "date": "2023-12-05",
+    "downloads": 60000
+  },
+  {
+    "id": 10,
+    "name": "Avito",
+    "icon": "images/logostankin.png",
+    "rating": 4.4,
+    "category": "Покупки",
+    "developer": "Avito",
+    "age": "12+",
+    "description": "Объявления о продаже и покупке товаров.",
+    "screenshots": ["images/banners/max.svg"],
+    "date": "2023-11-20",
+    "downloads": 55000
+  },
+  {
+    "id": 11,
+    "name": "Yandex Music",
+    "icon": "images/logostankin.png",
+    "rating": 4.7,
+    "category": "Развлечения",
+    "developer": "Яндекс",
+    "age": "12+",
+    "description": "Слушайте музыку онлайн и оффлайн.",
+    "screenshots": ["images/banners/max.svg"],
+    "date": "2023-10-15",
+    "downloads": 52000
+  },
+  {
+    "id": 12,
+    "name": "2GIS",
+    "icon": "images/logostankin.png",
+    "rating": 4.5,
+    "category": "Транспорт и навигация",
+    "developer": "2GIS",
+    "age": "0+",
+    "description": "Карты, навигация и справочник.",
+    "screenshots": ["images/banners/max.svg"],
+    "date": "2023-09-30",
+    "downloads": 48000
   }
 ]
