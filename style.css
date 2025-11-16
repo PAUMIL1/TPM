@@ -1329,3 +1329,73 @@ header {
     max-height: 60px;
   }
 }
+
+/* -------------------------------------------------
+   GALLERY LOOP (карусель скриншотов)
+   ------------------------------------------------- */
+.gallery-wrapper {
+  position: relative;
+  overflow: hidden;
+  margin: 0 -12px; /* компенсируем padding секции */
+}
+
+.gallery-track {
+  display: flex;
+  transition: transform 0.35s ease;
+  width: 100%;
+}
+
+.gallery-track img {
+  width: 120px;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 12px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin: 0 6px;
+}
+
+/* Кнопки */
+.gallery-prev,
+.gallery-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.85);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 20px;
+  color: #222;
+  cursor: pointer;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+.gallery-prev {
+  left: 12px;
+}
+.gallery-next {
+  right: 12px;
+}
+
+/* Точки */
+.gallery-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 12px;
+}
+.gallery-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ccc;
+  cursor: pointer;
+}
+.gallery-dot.active {
+  background: #0077ff;
+}

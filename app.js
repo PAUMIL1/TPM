@@ -5,6 +5,9 @@ let apps = []; // All apps from data.json
 let currentCategory = null; // Current selected category
 let history = []; // View history (IDs)
 let views = {}; // View counter per ID
+let galleryIndex = 0;
+let galleryTotal = 0;
+let galleryTouchStartX = 0;
 
 // ===================================================================
 // 2. DATA LOADING
@@ -81,15 +84,56 @@ const showAppDetail = (app) => {
   document.getElementById("app-age").textContent = app.age;
   document.getElementById("app-description").textContent = app.description;
 
-  // Скриншоты — без галереи
-  const screenshotsContainer = document.getElementById("screenshots");
-  screenshotsContainer.innerHTML = "";
-  app.screenshots.forEach((src) => {
-    const img = document.createElement("img");
-    img.src = src;
-    img.alt = `${app.name} screenshot`;
-    screenshotsContainer.appendChild(img);
-  });
+  // === GALLERY LOOP (луп-карусель) ===
+  const track = document.getElementById("gallery-track");
+  const dotsContainer = document.getElementById("gallery-dots");
+  track.innerHTML = "";
+  dotsContainer.innerHTML = "";
+
+  galleryTotal = app.screenshots.length;
+
+  if (galleryTotal === 0) {
+    document.querySelector(".screenshots-section").style.display = "none";
+  } else {
+    document.querySelector(".screenshots-section").style.display = "block";
+
+    app.screenshots.forEach((src, i) => {
+      const img = document.createElement("img");
+      img.src = src;
+      img.alt = `${app.name} screenshot ${i + 1}`;
+      track.appendChild(img);
+
+      const dot = document.createElement("div");
+      dot.className = "gallery-dot";
+      dot.onclick = () => goToGallerySlide(i);
+      dotsContainer.appendChild(dot);
+    });
+
+    // Клоны для лупа
+    const firstClone = track.children[0].cloneNode(true);
+    const lastClone = track.children[galleryTotal - 1].cloneNode(true);
+    track.appendChild(firstClone);
+    track.insertBefore(lastClone, track.firstChild);
+
+    galleryIndex = 1;
+    updateGallery();
+
+    // Кнопки
+    document.querySelector(".gallery-prev").onclick = () =>
+      changeGallerySlide(-1);
+    document.querySelector(".gallery-next").onclick = () =>
+      changeGallerySlide(1);
+
+    // Свайп
+    track.addEventListener(
+      "touchstart",
+      (e) => (galleryTouchStartX = e.touches[0].clientX)
+    );
+    track.addEventListener("touchend", (e) => {
+      const diff = galleryTouchStartX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 40) changeGallerySlide(diff > 0 ? 1 : -1);
+    });
+  }
 
   // Похожие приложения
   const similarApps = apps
@@ -99,35 +143,23 @@ const showAppDetail = (app) => {
 
   addToHistory(app.id);
   showScreen("app-detail");
-};
 
-const descContent = document.getElementById("description-content");
-const toggleBtn = document.getElementById("toggle-description");
-
-// Сброс состояния
-descContent.classList.remove("expanded");
-descContent.classList.add("collapsed");
-toggleBtn.classList.remove("expanded");
-toggleBtn.classList.add("collapsed");
-toggleBtn.textContent = "Ещё";
-
-// Обработчик
-toggleBtn.onclick = () => {
-  const isCollapsed = descContent.classList.contains("collapsed");
-
-  if (isCollapsed) {
-    descContent.classList.remove("collapsed");
-    descContent.classList.add("expanded");
-    toggleBtn.classList.remove("collapsed");
-    toggleBtn.classList.add("expanded");
-    toggleBtn.textContent = "Свернуть";
-  } else {
-    descContent.classList.remove("expanded");
-    descContent.classList.add("collapsed");
-    toggleBtn.classList.remove("expanded");
-    toggleBtn.classList.add("collapsed");
-    toggleBtn.textContent = "Ещё";
-  }
+  // === СВЁРНУТОЕ ОПИСАНИЕ ===
+  const descContent = document.getElementById("description-content");
+  const toggleBtn = document.getElementById("toggle-description");
+  descContent.classList.remove("expanded");
+  descContent.classList.add("collapsed");
+  toggleBtn.classList.remove("expanded");
+  toggleBtn.classList.add("collapsed");
+  toggleBtn.textContent = "Ещё";
+  toggleBtn.onclick = () => {
+    const collapsed = descContent.classList.contains("collapsed");
+    descContent.classList.toggle("collapsed", !collapsed);
+    descContent.classList.toggle("expanded", collapsed);
+    toggleBtn.classList.toggle("collapsed", !collapsed);
+    toggleBtn.classList.toggle("expanded", collapsed);
+    toggleBtn.textContent = collapsed ? "Свернуть" : "Ещё";
+  };
 };
 
 // ===================================================================
@@ -517,3 +549,42 @@ const filterAndRender = () => {
   // Popular categories
   renderPopularCategories();
 };
+
+// === GALLERY LOOP FUNCTIONS ===
+function updateGallery() {
+  const track = document.getElementById("gallery-track");
+  track.style.transform = `translateX(-${galleryIndex * (120 + 12)}px)`;
+
+  document.querySelectorAll(".gallery-dot").forEach((d, i) => {
+    d.classList.toggle("active", i === (galleryIndex - 1) % galleryTotal);
+  });
+}
+
+function changeGallerySlide(dir) {
+  galleryIndex += dir;
+
+  if (galleryIndex === 0) {
+    galleryIndex = galleryTotal;
+    track.style.transition = "none";
+    updateGallery();
+    requestAnimationFrame(() => {
+      track.style.transition = "transform 0.35s ease";
+      updateGallery();
+    });
+  } else if (galleryIndex === galleryTotal + 1) {
+    galleryIndex = 1;
+    track.style.transition = "none";
+    updateGallery();
+    requestAnimationFrame(() => {
+      track.style.transition = "transform 0.35s ease";
+      updateGallery();
+    });
+  } else {
+    updateGallery();
+  }
+}
+
+function goToGallerySlide(n) {
+  galleryIndex = n + 1;
+  updateGallery();
+}
