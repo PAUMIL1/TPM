@@ -205,26 +205,26 @@ const getRecentApps = () => {
   return apps.filter((app) => history.includes(app.id)).slice(-5);
 };
 
-const getPopularApps = () => {
+const getPopularApps = (list) => {
   return [...apps]
     .sort((a, b) => (b.downloads || 0) - (a.downloads || 0))
     .slice(0, 4);
 };
 
-const getNewApps = () => {
+const getNewApps = (list) => {
   return [...apps]
     .sort((a, b) => new Date(b.date) - new Date(a.date))
     .slice(0, 4);
 };
 
-const getFreeApps = () => {
+const getFreeApps = (list) => {
   return apps
     .filter((a) => (a.price || 0) === 0)
     .sort((a, b) => b.rating - a.rating)
     .slice(0, 4);
 };
 
-const getPaidApps = () => {
+const getPaidApps = (list) => {
   return apps
     .filter((a) => (a.price || 0) > 0)
     .sort((a, b) => b.rating - a.rating)
@@ -264,6 +264,26 @@ const renderGridApps = (appList, containerId) => {
     `;
     card.onclick = () => showAppDetail(app);
     container.appendChild(card);
+  });
+};
+
+const renderAllApps = (appList, containerId) => {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  container.innerHTML = "";
+  appList.forEach((app) => {
+    const item = document.createElement("div");
+    item.className = "app-item";
+    item.innerHTML = `
+      <img src="${app.icon}" alt="${app.name}" class="app-icon" loading="lazy">
+      <div class="app-info">
+        <div class="app-name">${app.name}</div>
+        <div class="app-rating">${app.rating}</div>
+      </div>
+    `;
+    item.onclick = () => showAppDetail(app);
+    container.appendChild(item);
   });
 };
 
@@ -436,7 +456,29 @@ document.addEventListener("DOMContentLoaded", async () => {
       }, 100);
     }
   };
-
+  // === КНОПКА «КАТЕГОРИИ»: переключение между списком и экраном категорий ===
+  document.getElementById("categories-btn").addEventListener("click", () => {
+    if (currentCategory) {
+      currentCategory = null; // сбрасываем выбранную категорию
+      filterAndRender(); // возвращаемся к главной странице
+    } else {
+      renderCategories(); // показываем плитки категорий
+      showScreen("categories"); // переходим на экран категорий
+    }
+  });
+  // === КНОПКА «НАЗАД» ИЗ СПИСКА ПРИЛОЖЕНИЙ КАТЕГОРИИ ===
+  document
+    .getElementById("back-from-category")
+    .addEventListener("click", () => {
+      currentCategory = null;
+      filterAndRender(); // возвращаемся на главную
+    }); // === КНОПКА «НАЗАД» ИЗ СПИСКА ПРИЛОЖЕНИЙ КАТЕГОРИИ ===
+  document
+    .getElementById("back-from-category")
+    .addEventListener("click", () => {
+      currentCategory = null;
+      filterAndRender(); // возвращаемся на главную
+    });
   showScreen("main");
 });
 
@@ -563,7 +605,6 @@ const renderPopularCategories = () => {
 const filterAndRender = () => {
   let filtered = [...apps];
 
-  // Search
   const searchInput = document.getElementById("search-input");
   const query = searchInput?.value.toLowerCase() || "";
   if (query) {
@@ -574,12 +615,10 @@ const filterAndRender = () => {
     );
   }
 
-  // Category filter
   if (currentCategory) {
     filtered = filtered.filter((app) => app.category === currentCategory);
   }
 
-  // Sorting
   const sortSelect = document.getElementById("sort-select");
   const sortBy = sortSelect?.value || "name";
   if (sortBy === "rating") filtered.sort((a, b) => b.rating - a.rating);
@@ -587,13 +626,25 @@ const filterAndRender = () => {
     filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
   else filtered.sort((a, b) => a.name.localeCompare(b.name));
 
-  // Render 2x2 grids
-  renderGridApps(getPopularApps(), "popular-apps-grid");
-  renderGridApps(getNewApps(), "new-apps-grid");
-  renderGridApps(getFreeApps(), "free-apps-grid");
-  renderGridApps(getPaidApps(), "paid-apps-grid");
+  const catSection = document.getElementById("category-apps");
+  const otherSections = document.querySelectorAll(
+    "#banners-carousel, #popular-categories, .apps-sections"
+  );
 
-  // Popular categories
+  if (currentCategory) {
+    otherSections.forEach((el) => (el.style.display = "none"));
+    catSection.style.display = "block";
+    document.getElementById("category-title").textContent = currentCategory;
+    renderAllApps(filtered, "all-apps-list");
+  } else {
+    otherSections.forEach((el) => (el.style.display = "block"));
+    catSection.style.display = "none";
+    renderGridApps(getPopularApps(filtered), "popular-apps-grid");
+    renderGridApps(getNewApps(filtered), "new-apps-grid");
+    renderGridApps(getFreeApps(filtered), "free-apps-grid");
+    renderGridApps(getPaidApps(filtered), "paid-apps-grid");
+  }
+
   renderPopularCategories();
 };
 

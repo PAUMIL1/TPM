@@ -1569,3 +1569,62 @@ header {
   color: #ffb400;
   font-weight: bold;
 }
+
+.category-apps {
+  margin-top: 20px;
+}
+
+.all-apps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.all-apps-list .app-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 4px;
+  border-radius: 12px;
+  transition: background 0.2s ease;
+  cursor: pointer;
+}
+
+.all-apps-list .app-item:hover {
+  background: #f5f5f5;
+}
+
+.all-apps-list .app-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.all-apps-list .app-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.all-apps-list .app-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #222;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.all-apps-list .app-rating {
+  font-size: 13px;
+  color: #666;
+  margin-top: 2px;
+}
+
+.all-apps-list .app-rating::before {
+  content: "★ ";
+  color: #ffb400;
+  font-weight: bold;
+}
