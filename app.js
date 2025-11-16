@@ -137,11 +137,29 @@ const showAppDetail = (app) => {
     });
   }
 
-  // Похожие приложения
+  // Похожие приложения — как на главной
   const similarApps = apps
     .filter((a) => a.category === app.category && a.id !== app.id)
     .slice(0, 5);
-  renderApps(similarApps, "similar-apps");
+
+  const similarContainer = document.getElementById("similar-apps");
+  similarContainer.innerHTML = "";
+
+  similarApps.forEach((similarApp) => {
+    const item = document.createElement("div");
+    item.className = "similar-app-item";
+    item.onclick = () => showAppDetail(similarApp);
+
+    item.innerHTML = `
+      <img src="${similarApp.icon}" alt="${similarApp.name}" class="similar-app-icon" loading="lazy">
+      <div class="similar-app-info">
+        <div class="similar-app-name">${similarApp.name}</div>
+        <div class="similar-app-rating">${similarApp.rating}</div>
+      </div>
+    `;
+
+    similarContainer.appendChild(item);
+  });
 
   addToHistory(app.id);
   showScreen("app-detail");

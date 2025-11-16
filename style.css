@@ -1082,6 +1082,57 @@ header {
   padding-top: 56px !important; /* Отступ под кнопку "Назад" */
 }
 
+/* -------------------------------------------------
+   ПОХОЖИЕ ПРИЛОЖЕНИЯ — КАК НА ГЛАВНОЙ
+   ------------------------------------------------- */
+#similar-apps .app-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 4px;
+  border-radius: 12px;
+  transition: background 0.2s ease;
+}
+
+#similar-apps .app-item:hover {
+  background: #f5f5f5;
+}
+
+#similar-apps .app-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+#similar-apps .app-info {
+  flex: 1;
+  min-width: 0;
+}
+
+#similar-apps .app-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #222;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#similar-apps .app-rating {
+  font-size: 13px;
+  color: #666;
+  margin-top: 2px;
+}
+
+#similar-apps .app-rating::before {
+  content: "★ ";
+  color: #ffb400;
+  font-weight: bold;
+}
+
 .app-header {
   display: flex;
   align-items: flex-start;
@@ -1465,4 +1516,56 @@ header {
 .close-screenshot:hover {
   background: white;
   transform: scale(1.1);
+}
+
+/* -------------------------------------------------
+   ПОХОЖИЕ ПРИЛОЖЕНИЯ — КАК НА ГЛАВНОЙ
+   ------------------------------------------------- */
+#similar-apps .similar-app-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 4px;
+  border-radius: 12px;
+  transition: background 0.2s ease;
+  cursor: pointer;
+}
+
+#similar-apps .similar-app-item:hover {
+  background: #f5f5f5;
+}
+
+#similar-apps .similar-app-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+#similar-apps .similar-app-info {
+  flex: 1;
+  min-width: 0;
+}
+
+#similar-apps .similar-app-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #222;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#similar-apps .similar-app-rating {
+  font-size: 13px;
+  color: #666;
+  margin-top: 2px;
+}
+
+#similar-apps .similar-app-rating::before {
+  content: "★ ";
+  color: #ffb400;
+  font-weight: bold;
 }
